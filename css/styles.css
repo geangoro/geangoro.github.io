@@ -1,0 +1,396 @@
+/* ============================================================
+   Del TIC al TAC — OVA · Grupo 9 MITE · Colegio Colsubsidio Maiporé
+   Sistema visual: lectura editorial de columna única, fondo crema
+   cálido, un color por momento, subrayados punteados (glosario),
+   transiciones suaves de 0.3s. Accesibilidad: contraste AA,
+   foco visible, información nunca solo por color.
+   ============================================================ */
+
+:root{
+  /* Neutros cálidos */
+  --fondo:#faf8f0;
+  --fondo-suave:#f3f0e3;
+  --tinta:#1a1a18;
+  --tinta-suave:#4d4b45;
+  --borde:#d8d3c2;
+
+  /* Acentos por momento (todos con contraste AA sobre crema y con blanco) */
+  --m1:#9c4a1c;   /* terracota — Reconocer */
+  --m2:#3a5a8f;   /* azul sereno — Aprender y practicar */
+  --m3:#2c5c41;   /* verde bosque — Crear */
+  --acento:#3a5a8f;
+
+  /* Tipografía */
+  --fuente-cuerpo:'Atkinson Hyperlegible', system-ui, 'Segoe UI', Arial, sans-serif;
+  --fuente-display:'Fraunces', Georgia, 'Times New Roman', serif;
+
+  --ancho:44rem;
+  --transicion:0.3s ease;
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  background:var(--fondo);
+  color:var(--tinta);
+  font-family:var(--fuente-cuerpo);
+  font-size:1.0625rem;      /* 17px — lectura cómoda */
+  line-height:1.65;
+}
+
+/* ---------- Salto al contenido ---------- */
+.saltar{
+  position:absolute; left:-999px; top:0;
+  background:var(--tinta); color:var(--fondo);
+  padding:.5rem 1rem; z-index:200; border-radius:0 0 .5rem 0;
+}
+.saltar:focus{left:0}
+
+/* ---------- Cabecera ---------- */
+.cabecera{
+  position:sticky; top:0; z-index:100;
+  background:var(--fondo);
+  border-bottom:1px solid var(--borde);
+}
+.cabecera-interior{
+  max-width:var(--ancho); margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.75rem 1.25rem .4rem;
+}
+.marca{
+  background:none; border:none; padding:0; cursor:pointer;
+  font-family:var(--fuente-display); font-weight:600; font-size:1.15rem;
+  color:var(--tinta); letter-spacing:.01em;
+}
+.menu{display:flex; gap:.5rem}
+.menu-boton{
+  font:inherit; font-size:.92rem;
+  background:none; border:1px dotted var(--tinta-suave); border-radius:1.25rem;
+  padding:.3rem .95rem; cursor:pointer; color:var(--tinta);
+  transition:border-style var(--transicion), background var(--transicion);
+}
+.menu-boton:hover, .menu-boton[aria-expanded="true"]{border-style:solid; background:var(--fondo-suave)}
+
+.progreso{
+  height:.3rem; background:var(--fondo-suave);
+}
+.progreso-relleno{
+  height:100%; width:0%;
+  background:var(--acento);
+  transition:width var(--transicion), background var(--transicion);
+}
+.progreso-texto{
+  max-width:var(--ancho); margin:0 auto;
+  padding:.25rem 1.25rem .5rem;
+  font-size:.82rem; color:var(--tinta-suave);
+}
+
+/* ---------- Paneles (Menú / Ayuda) ---------- */
+.panel{
+  position:fixed; top:4.4rem; right:1rem; z-index:150;
+  width:min(24rem, calc(100vw - 2rem));
+  max-height:calc(100vh - 6rem); overflow:auto;
+  background:var(--fondo);
+  border:1px solid var(--tinta);
+  border-radius:.5rem;
+  padding:1.1rem 1.25rem;
+  box-shadow:.35rem .35rem 0 rgba(26,26,24,.12);
+}
+.panel-titulo{
+  font-family:var(--fuente-display); font-weight:600; font-size:1.05rem;
+  margin:.9rem 0 .4rem;
+}
+.panel-titulo:first-child{margin-top:0}
+.panel-lista{margin:0; padding-left:1.4rem}
+.panel-lista li{margin:.3rem 0}
+.panel-lista button{
+  background:none; border:none; padding:0; cursor:pointer;
+  font:inherit; color:var(--tinta); text-align:left;
+  text-decoration:underline dotted; text-underline-offset:4px;
+}
+.panel-lista button:hover{text-decoration-style:solid}
+.panel-lista button[disabled]{color:var(--tinta-suave); text-decoration:none; cursor:default}
+.panel-lista .actual{font-weight:700}
+.panel-nota{font-size:.85rem; color:var(--tinta-suave); margin:.8rem 0 0}
+.panel-ayuda-lista{padding-left:1.2rem; margin:.2rem 0 .6rem}
+.panel-ayuda-lista li{margin:.35rem 0; font-size:.95rem}
+.glosario{margin:0}
+.glosario dt{font-weight:700; margin-top:.7rem}
+.glosario dd{margin:.15rem 0 0; font-size:.95rem; color:var(--tinta-suave)}
+.glosario-muestra{text-decoration:underline dotted; text-underline-offset:4px}
+
+/* ---------- Estructura de pasos ---------- */
+main{max-width:var(--ancho); margin:0 auto; padding:2.5rem 1.25rem 5rem}
+
+.paso{animation:aparecer var(--transicion)}
+@keyframes aparecer{from{opacity:0; transform:translateY(.4rem)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion: reduce){
+  .paso{animation:none}
+  html{scroll-behavior:auto}
+  *{transition:none !important}
+}
+
+.etiqueta{
+  font-size:.8rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--tinta-suave); margin:0 0 .6rem;
+  border-left:3px solid var(--acento); padding-left:.6rem;
+}
+.momento-1 .etiqueta{border-color:var(--m1)}
+.momento-2 .etiqueta{border-color:var(--m2)}
+.momento-3 .etiqueta{border-color:var(--m3)}
+
+h1, h2, h3{font-family:var(--fuente-display); line-height:1.2}
+h1{font-size:2.6rem; font-weight:900; margin:.2rem 0 .3rem; letter-spacing:-.01em}
+h2{font-size:1.65rem; font-weight:600; margin:2.2rem 0 .8rem}
+h2:first-of-type{margin-top:.4rem}
+h3{font-size:1.2rem; font-weight:600; margin:1.4rem 0 .4rem}
+.subtitulo{font-size:1.25rem; color:var(--tinta-suave); margin:.1rem 0 1.6rem}
+
+abbr{text-decoration:underline dotted; text-underline-offset:3px}
+
+/* ---------- Componentes ---------- */
+.destacado{
+  background:var(--fondo-suave);
+  border:1px solid var(--borde);
+  border-left:.35rem solid var(--acento);
+  border-radius:.4rem;
+  padding:1.1rem 1.3rem; margin:1.6rem 0;
+}
+.destacado-titulo{
+  font-family:var(--fuente-display); font-weight:600; font-size:1.05rem;
+  margin:0 0 .35rem;
+}
+.destacado p:last-child{margin-bottom:0}
+.momento-1 .destacado{border-left-color:var(--m1)}
+.momento-2 .destacado{border-left-color:var(--m2)}
+.momento-3 .destacado{border-left-color:var(--m3)}
+
+.nota{font-size:.88rem; color:var(--tinta-suave)}
+
+.recorrido-resumen{padding-left:1.4rem}
+.recorrido-resumen li{margin:.55rem 0}
+
+.video-placeholder{
+  display:flex; gap:1rem; align-items:center;
+  border:2px dashed var(--tinta-suave); border-radius:.6rem;
+  padding:1.4rem 1.5rem; margin:1.4rem 0;
+  color:var(--tinta-suave);
+}
+.video-placeholder p{margin:0}
+
+.infografia{margin:1.8rem 0}
+.infografia svg{width:100%; height:auto; display:block}
+.infografia figcaption{
+  font-size:.88rem; color:var(--tinta-suave);
+  margin-top:.5rem; border-top:1px dotted var(--borde); padding-top:.5rem;
+}
+.svg-titulo{font-family:var(--fuente-cuerpo); font-weight:700; font-size:20px; fill:var(--tinta)}
+.svg-texto{font-family:var(--fuente-cuerpo); font-size:13px; fill:var(--tinta-suave)}
+
+.ejemplo-par{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin:1.6rem 0}
+@media (max-width:38rem){.ejemplo-par{grid-template-columns:1fr}}
+.ejemplo{border-top:2px solid var(--borde); padding-top:.7rem}
+.ejemplo-titulo{
+  font-weight:700; font-size:.9rem; margin:0 0 .3rem;
+  letter-spacing:.04em;
+}
+.ejemplo-titulo.tic{color:var(--m1)}
+.ejemplo-titulo.tac{color:var(--m3)}
+.ejemplo p{margin:.2rem 0; font-size:.98rem}
+
+/* Términos del glosario dentro del texto */
+.termino{
+  background:none; border:none; padding:0; font:inherit; cursor:pointer;
+  font-weight:700; color:var(--tinta);
+  text-decoration:underline dotted; text-underline-offset:4px;
+  transition:text-decoration-style var(--transicion);
+}
+.termino:hover{text-decoration-style:solid}
+
+/* ---------- Criterios y piezas ---------- */
+.criterio{
+  display:flex; gap:1.1rem; align-items:flex-start;
+  padding:1.2rem 0; border-top:1px dotted var(--borde);
+}
+.criterio:first-of-type{border-top:none}
+.criterio-num{
+  font-family:var(--fuente-display); font-weight:900; font-size:2.2rem;
+  color:var(--m2); margin:0; line-height:1; min-width:2.4rem;
+}
+.criterio h3{margin-top:0}
+
+.piezas{display:grid; gap:1rem; margin:1.4rem 0}
+.pieza{border-top:2px solid var(--m2); padding-top:.8rem}
+.pieza h3{margin-top:0; display:flex; align-items:center; gap:.6rem}
+.pieza-letra{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--m2); color:#fff;
+  font-family:var(--fuente-cuerpo); font-weight:700; font-size:1rem;
+}
+.pieza p{margin:.3rem 0}
+
+/* ---------- Diagnóstico ---------- */
+.diagnostico fieldset{
+  border:none; border-top:1px dotted var(--borde);
+  padding:1.1rem 0 .9rem; margin:0;
+}
+.diagnostico legend{
+  font-weight:700; padding:0 0 .6rem; font-size:1rem;
+}
+.opciones-escala{display:flex; flex-wrap:wrap; gap:.5rem}
+.opciones-escala label{
+  border:1px dotted var(--tinta-suave); border-radius:1.25rem;
+  padding:.35rem .95rem; cursor:pointer; font-size:.95rem;
+  transition:all var(--transicion);
+}
+.opciones-escala label:hover{border-style:solid}
+.opciones-escala input{position:absolute; opacity:0; width:1px; height:1px}
+.opciones-escala label:has(input:checked){
+  background:var(--m1); border:1px solid var(--m1); color:#fff; font-weight:700;
+}
+.opciones-escala label:has(input:focus-visible){outline:3px solid var(--tinta); outline-offset:2px}
+
+.resultado{
+  margin:1.4rem 0;
+  padding:1.1rem 1.3rem;
+  background:var(--fondo-suave);
+  border:1px solid var(--borde);
+  border-radius:.4rem;
+}
+.resultado strong{display:block; margin-bottom:.3rem}
+
+/* ---------- Casos ---------- */
+.caso{
+  border:1px solid var(--borde); border-radius:.6rem;
+  padding:1.4rem 1.5rem; margin:1.6rem 0;
+  background:var(--fondo);
+}
+.caso-encabezado{display:flex; justify-content:space-between; align-items:baseline; gap:1rem}
+.caso h3{margin:0}
+.caso-asignatura{
+  font-size:.8rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--tinta-suave); white-space:nowrap;
+}
+.caso-escenario{margin:.7rem 0 1rem; font-size:.99rem}
+.caso-pregunta{font-weight:700; margin:0 0 .6rem}
+.caso-opciones{display:grid; gap:.5rem}
+.caso-opcion{
+  text-align:left; font:inherit; font-size:.97rem;
+  background:var(--fondo); color:var(--tinta);
+  border:1px dotted var(--tinta-suave); border-radius:.45rem;
+  padding:.6rem .9rem; cursor:pointer;
+  transition:all var(--transicion);
+}
+.caso-opcion:hover:not([disabled]){border-style:solid; background:var(--fondo-suave)}
+.caso-opcion[disabled]{cursor:default; opacity:.75}
+.caso-opcion.correcta{border:2px solid var(--m3); background:#eef4ef; opacity:1; font-weight:700}
+.caso-opcion.incorrecta{border:2px solid var(--m1); background:#f9efe8; opacity:1}
+.retroalimentacion{
+  margin-top:.9rem; padding:.9rem 1.1rem;
+  border-radius:.45rem; font-size:.96rem;
+  border-left:.35rem solid var(--m2);
+  background:var(--fondo-suave);
+}
+.retroalimentacion.exito{border-left-color:var(--m3)}
+.retroalimentacion.reintento{border-left-color:var(--m1)}
+.retroalimentacion strong{display:block; margin-bottom:.2rem}
+.caso-acciones{margin-top:.7rem; display:flex; gap:.6rem}
+.casos-cierre{margin-top:2rem}
+
+/* ---------- Plantilla ---------- */
+.plantilla{margin-top:1.4rem}
+.campo{margin-bottom:1.4rem}
+.campo-duo{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem}
+@media (max-width:38rem){.campo-duo{grid-template-columns:1fr}}
+.campo label{font-weight:700; display:block; margin-bottom:.25rem}
+.campo label .pieza-letra{background:var(--m3); vertical-align:-.15rem; margin-right:.35rem}
+.ayuda-campo{font-size:.88rem; color:var(--tinta-suave); margin:.1rem 0 .45rem}
+.campo input[type="text"], .campo select, .campo textarea{
+  width:100%; font:inherit; font-size:1rem;
+  background:#fff; color:var(--tinta);
+  border:1px solid var(--tinta-suave); border-radius:.4rem;
+  padding:.6rem .75rem;
+}
+.campo textarea{resize:vertical; line-height:1.55}
+.campo input:focus, .campo select:focus, .campo textarea:focus{
+  outline:3px solid var(--m3); outline-offset:1px; border-color:var(--m3);
+}
+
+/* ---------- Lista de cotejo ---------- */
+.lista-cotejo{display:grid; gap:.6rem; margin:1.2rem 0}
+.cotejo-item{
+  display:flex; gap:.7rem; align-items:flex-start;
+  border:1px dotted var(--tinta-suave); border-radius:.45rem;
+  padding:.65rem .9rem; cursor:pointer; font-size:.97rem;
+  transition:all var(--transicion);
+}
+.cotejo-item:hover{border-style:solid}
+.cotejo-item input{margin-top:.3rem; width:1.1rem; height:1.1rem; accent-color:var(--m3)}
+.cotejo-item:has(input:checked){background:#eef4ef; border:1px solid var(--m3)}
+
+.acciones-descarga{display:flex; flex-wrap:wrap; gap:.8rem; margin:1rem 0}
+
+.reflexion{padding-left:1.2rem}
+.reflexion li{margin:.7rem 0}
+
+.fuentes{padding-left:1.2rem}
+.fuentes li{margin:.5rem 0; font-size:.95rem}
+.licencia{display:flex; gap:.9rem; align-items:flex-start}
+.licencia svg{flex-shrink:0; margin-top:.2rem}
+.cierre-final{border-left-color:var(--m3)}
+
+/* ---------- Navegación y botones ---------- */
+.navegacion{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:3rem; padding-top:1.4rem;
+  border-top:1px solid var(--borde);
+}
+.btn{
+  font:inherit; font-size:1rem; cursor:pointer;
+  background:var(--fondo); color:var(--tinta);
+  border:1px solid var(--tinta); border-radius:1.5rem;
+  padding:.55rem 1.4rem;
+  transition:all var(--transicion);
+}
+.btn:hover{background:var(--fondo-suave)}
+.btn-principal{
+  background:var(--tinta); color:var(--fondo);
+  border:1px solid var(--tinta);
+}
+.btn-principal:hover{background:#33332f}
+
+/* Foco visible global (accesibilidad) */
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
+  outline:3px solid var(--tinta); outline-offset:2px;
+}
+/* Los títulos reciben foco programático al cambiar de paso (para lectores de
+   pantalla); el recuadro solo se muestra si el foco viene del teclado */
+.paso h1:focus:not(:focus-visible), .paso h2:focus:not(:focus-visible){outline:none}
+
+/* Resultados vacíos no ocupan espacio */
+.resultado:empty{display:none}
+
+/* ---------- Impresión (actividad descargable) ---------- */
+#area-impresion{display:none}
+@media print{
+  body > *:not(#area-impresion){display:none !important}
+  #area-impresion{
+    display:block; font-family:Georgia, serif; color:#000;
+    padding:2rem; max-width:48rem; margin:0 auto;
+  }
+  #area-impresion h1{font-size:1.5rem}
+  #area-impresion h2{font-size:1.1rem; margin-top:1.2rem}
+  #area-impresion p{margin:.3rem 0}
+  #area-impresion .doc-meta{color:#444; font-size:.9rem}
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:38rem){
+  h1{font-size:2rem}
+  h2{font-size:1.4rem}
+  .panel{right:.5rem; top:4.2rem}
+}
