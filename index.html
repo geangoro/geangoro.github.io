@@ -1,10 +1,430 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <bode>
-      <h1>Hola</h1>
-      <p1>Esto es una prueba</p1>
-      <p1>Esta es una segunda prueba</p1>
-    </bode>
-  </head>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OVA de formación docente: aprende a integrar las TAC en el diseño de una actividad de clase con propósito pedagógico. Proyecto de innovación — Colegio Colsubsidio Maiporé.">
+<title>Del TIC al TAC · Diseña tu actividad de clase con propósito pedagógico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="saltar" href="#contenido">Saltar al contenido principal</a>
+
+<!-- ============ ENCABEZADO PERMANENTE ============ -->
+<header class="cabecera">
+  <div class="cabecera-interior">
+    <button class="marca" data-goto="bienvenida" aria-label="Ir al inicio">
+      <span class="marca-nombre">Del TIC al TAC</span>
+    </button>
+    <nav class="menu" aria-label="Menú principal">
+      <button class="menu-boton" id="boton-menu" aria-expanded="false" aria-controls="panel-menu">Menú</button>
+      <button class="menu-boton" id="boton-ayuda" aria-expanded="false" aria-controls="panel-ayuda">Ayuda</button>
+    </nav>
+  </div>
+  <div class="progreso" role="progressbar" aria-label="Progreso del recorrido" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progreso-barra-cont">
+    <div class="progreso-relleno" id="progreso-relleno"></div>
+  </div>
+  <p class="progreso-texto" id="progreso-texto" aria-live="polite">Bienvenida</p>
+</header>
+
+<!-- Panel Menú -->
+<div class="panel" id="panel-menu" hidden>
+  <p class="panel-titulo">Recorrido</p>
+  <ol class="panel-lista" id="lista-pasos"></ol>
+  <p class="panel-nota">Puedes volver a cualquier paso ya visitado. Tu avance se guarda en este dispositivo.</p>
+</div>
+
+<!-- Panel Ayuda -->
+<div class="panel" id="panel-ayuda" hidden>
+  <p class="panel-titulo">¿Cómo usar este recurso?</p>
+  <ul class="panel-ayuda-lista">
+    <li>Avanza con el botón <strong>Siguiente</strong> y regresa con <strong>Anterior</strong>.</li>
+    <li>En los ejercicios puedes <strong>reintentar</strong> todas las veces que necesites; equivocarse hace parte del aprendizaje.</li>
+    <li>Las palabras con <span class="glosario-muestra">subrayado punteado</span> tienen una definición: púlsalas para verla.</li>
+    <li>Tu avance y tus respuestas se guardan solo en este dispositivo; puedes cerrar y continuar después.</li>
+  </ul>
+  <p class="panel-titulo">Glosario</p>
+  <dl class="glosario" id="glosario-lista"></dl>
+</div>
+
+<main id="contenido">
+
+<!-- ============ PASO 0 · BIENVENIDA ============ -->
+<section class="paso" id="paso-bienvenida" data-paso="bienvenida">
+  <p class="etiqueta">Bienvenida</p>
+  <h1>Del TIC al <abbr title="Tecnologías para el Aprendizaje y el Conocimiento">TAC</abbr></h1>
+  <p class="subtitulo">Diseña tu actividad de clase con propósito pedagógico</p>
+
+  <div class="video-placeholder" role="img" aria-label="Espacio reservado para el video de bienvenida">
+    <svg viewBox="0 0 64 64" width="48" height="48" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="3"/><path d="M26 20 L46 32 L26 44 Z" fill="currentColor"/></svg>
+    <p>Aquí encontrarás un video corto de bienvenida.<br><span class="nota">(En esta versión de prueba, el video se agregará próximamente.)</span></p>
+  </div>
+
+  <p>Este recurso hace parte de la estrategia de formación docente del <strong>Colegio Colsubsidio Maiporé</strong>. Está pensado para ti, que enseñas en sexto o séptimo y usas tecnología en tu clase, pero quisieras sacarle más provecho pedagógico.</p>
+
+  <div class="destacado">
+    <p class="destacado-titulo">Al finalizar podrás</p>
+    <p>Diseñar una actividad de enseñanza que integre la tecnología con un <strong>propósito pedagógico claro</strong>, eligiendo la herramienta con criterios y explicando por qué tu diseño favorece el aprendizaje de tus estudiantes.</p>
+  </div>
+
+  <h2>¿Cómo es el recorrido?</h2>
+  <ol class="recorrido-resumen">
+    <li><strong>Momento 1 · Reconocer.</strong> Mirarás cómo usas hoy la tecnología en tu clase.</li>
+    <li><strong>Momento 2 · Aprender y practicar.</strong> Conocerás criterios para elegir herramientas y analizarás casos de clase reales.</li>
+    <li><strong>Momento 3 · Crear.</strong> Diseñarás tu propia actividad con una plantilla guiada y reflexionarás sobre lo aprendido.</li>
+  </ol>
+  <p class="nota">Tiempo estimado: 60 a 90 minutos. No necesitas terminar de una vez: tu avance se guarda.</p>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <span></span>
+    <button class="btn btn-principal" data-goto="m1-continuum">Comenzar <span aria-hidden="true">→</span></button>
+  </nav>
+</section>
+
+<!-- ============ PASO 1 · MOMENTO 1: CONTINUO TIC-TAC ============ -->
+<section class="paso momento-1" id="paso-m1-continuum" data-paso="m1-continuum" hidden>
+  <p class="etiqueta">Momento 1 · Reconocer</p>
+  <h2>No es lo mismo usar tecnología que aprender con tecnología</h2>
+
+  <p>Piensa en tu última clase con tecnología. Quizás proyectaste un video, mostraste una presentación o pediste que buscaran información en internet. Eso es usar la tecnología como <strong>apoyo</strong>: la clase sigue siendo la misma, solo que con un recurso digital. A eso lo llamamos uso <button class="termino" data-termino="tic">TIC</button>.</p>
+
+  <p>Hay otro nivel: cuando la tecnología se vuelve parte de <strong>cómo</strong> aprenden tus estudiantes —cuando les permite crear, simular, colaborar o representar lo que entienden de maneras que sin ella no serían posibles—. A eso lo llamamos <button class="termino" data-termino="tac">TAC</button>. La diferencia no está en la herramienta, sino en el <button class="termino" data-termino="proposito">propósito pedagógico</button> con el que la usas.</p>
+
+  <figure class="infografia">
+    <svg viewBox="0 0 720 210" role="img" aria-labelledby="t-infografia d-infografia">
+      <title id="t-infografia">Continuo TIC–TAC–TEP</title>
+      <desc id="d-infografia">Un continuo con tres niveles: TIC, la tecnología como apoyo de la clase tradicional; TAC, la tecnología como medio de aprendizaje del estudiante; y TEP, la tecnología transformando la cultura y las prácticas de toda la institución.</desc>
+      <line x1="40" y1="150" x2="680" y2="150" stroke="#1a1a18" stroke-width="2"/>
+      <path d="M672 142 L688 150 L672 158 Z" fill="#1a1a18"/>
+      <g>
+        <circle cx="130" cy="150" r="10" fill="#C66026"/>
+        <text x="130" y="118" text-anchor="middle" class="svg-titulo">TIC</text>
+        <text x="130" y="182" text-anchor="middle" class="svg-texto">Apoyo de la clase</text>
+        <text x="130" y="198" text-anchor="middle" class="svg-texto">(proyectar, mostrar)</text>
+      </g>
+      <g>
+        <circle cx="370" cy="150" r="10" fill="#48699B"/>
+        <text x="370" y="118" text-anchor="middle" class="svg-titulo">TAC</text>
+        <text x="370" y="182" text-anchor="middle" class="svg-texto">Medio de aprendizaje</text>
+        <text x="370" y="198" text-anchor="middle" class="svg-texto">(crear, simular, colaborar)</text>
+      </g>
+      <g>
+        <circle cx="610" cy="150" r="10" fill="#2F6B4F"/>
+        <text x="610" y="118" text-anchor="middle" class="svg-titulo">TEP</text>
+        <text x="610" y="182" text-anchor="middle" class="svg-texto">Transformación institucional</text>
+        <text x="610" y="198" text-anchor="middle" class="svg-texto">(cultura y prácticas)</text>
+      </g>
+      <text x="40" y="40" class="svg-texto">Misma herramienta,</text>
+      <text x="40" y="58" class="svg-texto">distinto propósito →</text>
+    </svg>
+    <figcaption>El continuo TIC–TAC–TEP: un mismo recurso puede ubicarse en distintos niveles según el uso que se le dé.</figcaption>
+  </figure>
+
+  <div class="ejemplo-par">
+    <div class="ejemplo">
+      <p class="ejemplo-titulo tic">Ejemplo de uso TIC</p>
+      <p>«Proyecto un video sobre la fotosíntesis y luego los estudiantes responden el cuestionario del libro.»</p>
+    </div>
+    <div class="ejemplo">
+      <p class="ejemplo-titulo tac">Ejemplo de uso TAC</p>
+      <p>«Los estudiantes registran con el celular el crecimiento de una planta durante dos semanas, organizan los datos en una hoja de cálculo y crean un video corto explicando sus conclusiones.»</p>
+    </div>
+  </div>
+
+  <p>En ambos ejemplos hay tecnología. En el segundo, además, los estudiantes <strong>hacen algo con ella que transforma su manera de aprender</strong>. Ninguno de los dos es "malo": el punto es saber en qué nivel estás y decidir conscientemente cuándo conviene subir un peldaño.</p>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <button class="btn" data-goto="bienvenida"><span aria-hidden="true">←</span> Anterior</button>
+    <button class="btn btn-principal" data-goto="m1-diagnostico">Siguiente <span aria-hidden="true">→</span></button>
+  </nav>
+</section>
+
+<!-- ============ PASO 2 · MOMENTO 1: AUTODIAGNÓSTICO ============ -->
+<section class="paso momento-1" id="paso-m1-diagnostico" data-paso="m1-diagnostico" hidden>
+  <p class="etiqueta">Momento 1 · Reconocer</p>
+  <h2>¿Cómo usas hoy la tecnología en tu clase?</h2>
+  <p>Responde con honestidad estas cinco afirmaciones. No hay respuestas buenas ni malas: esto es una fotografía de tu punto de partida, y solo la ves tú.</p>
+
+  <form id="form-diagnostico" class="diagnostico">
+    <fieldset>
+      <legend>1. Cuando planeo mi clase, primero defino qué quiero que aprendan mis estudiantes y después decido si la tecnología ayuda.</legend>
+      <div class="opciones-escala" data-pregunta="d1"></div>
+    </fieldset>
+    <fieldset>
+      <legend>2. En mis clases, los estudiantes usan la tecnología para crear o producir algo (no solo para ver o copiar información).</legend>
+      <div class="opciones-escala" data-pregunta="d2"></div>
+    </fieldset>
+    <fieldset>
+      <legend>3. Elijo las herramientas digitales según el propósito de la actividad, no según cuál esté disponible o me resulte más fácil.</legend>
+      <div class="opciones-escala" data-pregunta="d3"></div>
+    </fieldset>
+    <fieldset>
+      <legend>4. Me siento en capacidad de evaluar si una actividad con tecnología realmente mejoró el aprendizaje.</legend>
+      <div class="opciones-escala" data-pregunta="d4"></div>
+    </fieldset>
+    <fieldset>
+      <legend>5. Conozco herramientas digitales gratuitas que podría usar en mi asignatura.</legend>
+      <div class="opciones-escala" data-pregunta="d5"></div>
+    </fieldset>
+    <button type="submit" class="btn btn-principal">Ver mi resultado</button>
+  </form>
+
+  <div class="resultado" id="resultado-diagnostico" hidden aria-live="polite"></div>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <button class="btn" data-goto="m1-continuum"><span aria-hidden="true">←</span> Anterior</button>
+    <button class="btn btn-principal" data-goto="m2-criterios">Siguiente <span aria-hidden="true">→</span></button>
+  </nav>
+</section>
+
+<!-- ============ PASO 3 · MOMENTO 2: CRITERIOS ============ -->
+<section class="paso momento-2" id="paso-m2-criterios" data-paso="m2-criterios" hidden>
+  <p class="etiqueta">Momento 2 · Aprender y practicar</p>
+  <h2>Cuatro criterios para elegir una herramienta digital</h2>
+  <p>Antes de abrir cualquier aplicación, hazte estas cuatro preguntas. Si la herramienta no pasa el primer criterio, los demás no importan.</p>
+
+  <div class="criterio" id="criterio-1">
+    <p class="criterio-num" aria-hidden="true">1</p>
+    <div>
+      <h3>Propósito: ¿qué aprendizaje hace posible?</h3>
+      <p>La herramienta debe servir al <button class="termino" data-termino="objetivo">objetivo de aprendizaje</button>, no al revés. Si no puedes completar la frase <em>«con esta herramienta mis estudiantes podrán…»</em>, la tecnología está sobrando.</p>
+    </div>
+  </div>
+  <div class="criterio" id="criterio-2">
+    <p class="criterio-num" aria-hidden="true">2</p>
+    <div>
+      <h3>Pertinencia: ¿es la mejor opción para ese propósito?</h3>
+      <p>No se trata de la herramienta más nueva ni más llamativa, sino de la que mejor se ajusta. A veces una hoja de cálculo simple enseña más que una aplicación sofisticada.</p>
+    </div>
+  </div>
+  <div class="criterio" id="criterio-3">
+    <p class="criterio-num" aria-hidden="true">3</p>
+    <div>
+      <h3>Viabilidad: ¿puedo usarla en mi contexto real?</h3>
+      <p>¿Es gratuita o de libre acceso? ¿Funciona con la conectividad y los equipos del colegio? ¿El tiempo que tomará aprenderla es razonable frente a lo que aporta?</p>
+    </div>
+  </div>
+  <div class="criterio" id="criterio-4">
+    <p class="criterio-num" aria-hidden="true">4</p>
+    <div>
+      <h3>Valor agregado: ¿qué aporta que no podría lograr sin ella?</h3>
+      <p>Si la actividad sería exactamente igual sin tecnología, estás en un uso de apoyo (TIC). Eso no está mal, pero reconócelo: el salto a TAC ocurre cuando la herramienta permite crear, simular, colaborar o representar de maneras nuevas.</p>
+    </div>
+  </div>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <button class="btn" data-goto="m1-diagnostico"><span aria-hidden="true">←</span> Anterior</button>
+    <button class="btn btn-principal" data-goto="m2-componentes">Siguiente <span aria-hidden="true">→</span></button>
+  </nav>
+</section>
+
+<!-- ============ PASO 4 · MOMENTO 2: COMPONENTES ============ -->
+<section class="paso momento-2" id="paso-m2-componentes" data-paso="m2-componentes" hidden>
+  <p class="etiqueta">Momento 2 · Aprender y practicar</p>
+  <h2>Una actividad de enseñanza tiene tres piezas</h2>
+  <p>Toda actividad con TAC bien diseñada responde, en orden, tres preguntas. Cuando diseñes la tuya en el Momento 3, la plantilla te guiará por estas mismas piezas.</p>
+
+  <div class="piezas">
+    <div class="pieza">
+      <h3><span class="pieza-letra" aria-hidden="true">A</span> Objetivo</h3>
+      <p><strong>¿Qué aprenderán?</strong> Escríbelo como algo observable: no «comprenderán las fracciones», sino «resolverán repartos con fracciones en situaciones de la vida diaria».</p>
+    </div>
+    <div class="pieza">
+      <h3><span class="pieza-letra" aria-hidden="true">B</span> Actividad</h3>
+      <p><strong>¿Qué harán?</strong> La tarea concreta de los estudiantes y el papel de la tecnología en ella: qué herramienta, para qué, y qué producirán.</p>
+    </div>
+    <div class="pieza">
+      <h3><span class="pieza-letra" aria-hidden="true">C</span> Evaluación</h3>
+      <p><strong>¿Cómo sabré que aprendieron?</strong> Qué evidencia recogerás (un producto, una explicación, un registro) y con qué criterios la valorarás.</p>
+    </div>
+  </div>
+
+  <div class="destacado">
+    <p class="destacado-titulo">La regla de oro</p>
+    <p>Las tres piezas deben contar la misma historia. Si el objetivo es que argumenten, la actividad debe hacerlos argumentar y la evaluación debe mirar la calidad de sus argumentos. Cuando una pieza se desalinea, la actividad se desinfla.</p>
+  </div>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <button class="btn" data-goto="m2-criterios"><span aria-hidden="true">←</span> Anterior</button>
+    <button class="btn btn-principal" data-goto="m2-casos">A practicar con casos <span aria-hidden="true">→</span></button>
+  </nav>
+</section>
+
+<!-- ============ PASO 5 · MOMENTO 2: CASOS ============ -->
+<section class="paso momento-2" id="paso-m2-casos" data-paso="m2-casos" hidden>
+  <p class="etiqueta">Momento 2 · Aprender y practicar</p>
+  <h2>Analiza tres casos de clase</h2>
+  <p>Ahora pondrás en juego los cuatro criterios y las tres piezas. Lee cada caso, toma una decisión y revisa la retroalimentación. Puedes reintentar las veces que quieras: equivocarse aquí es gratis.</p>
+  <p class="nota">Los casos son de asignaturas distintas a propósito: los criterios aplican igual en todas.</p>
+
+  <div id="casos-contenedor"></div>
+
+  <div class="casos-cierre" id="casos-cierre" hidden>
+    <div class="destacado">
+      <p class="destacado-titulo">Analizaste los tres casos</p>
+      <p>Fíjate en el patrón: en ninguno el problema era la herramienta en sí, sino la relación entre propósito, actividad y evaluación. Ese es el ojo que estás entrenando. Ahora te toca a ti: vas a diseñar tu propia actividad.</p>
+    </div>
+  </div>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <button class="btn" data-goto="m2-componentes"><span aria-hidden="true">←</span> Anterior</button>
+    <button class="btn btn-principal" data-goto="m3-plantilla">Crear mi actividad <span aria-hidden="true">→</span></button>
+  </nav>
+</section>
+
+<!-- ============ PASO 6 · MOMENTO 3: PLANTILLA ============ -->
+<section class="paso momento-3" id="paso-m3-plantilla" data-paso="m3-plantilla" hidden>
+  <p class="etiqueta">Momento 3 · Crear</p>
+  <h2>Diseña tu actividad de enseñanza con TAC</h2>
+  <p>Completa la plantilla pensando en una clase real de tu asignatura, de sexto o séptimo. Escribe sin miedo: es un borrador de trabajo que luego contrastarás con tus pares y con el docente insignia en los espacios de formación.</p>
+
+  <form id="form-plantilla" class="plantilla">
+    <div class="campo">
+      <label for="p-nombre">Tu nombre</label>
+      <input type="text" id="p-nombre" autocomplete="name">
+    </div>
+    <div class="campo-duo">
+      <div class="campo">
+        <label for="p-asignatura">Asignatura</label>
+        <input type="text" id="p-asignatura" placeholder="Ej.: Ciencias Naturales">
+      </div>
+      <div class="campo">
+        <label for="p-grado">Grado</label>
+        <select id="p-grado">
+          <option value="">Elige…</option>
+          <option>Sexto</option>
+          <option>Séptimo</option>
+          <option>Sexto y séptimo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="p-objetivo"><span class="pieza-letra" aria-hidden="true">A</span> Objetivo de aprendizaje — ¿qué aprenderán?</label>
+      <p class="ayuda-campo">Escríbelo observable: «los estudiantes podrán…»</p>
+      <textarea id="p-objetivo" rows="3" placeholder="Ej.: Los estudiantes podrán interpretar gráficas de temperatura y formular conclusiones sobre el clima de su región."></textarea>
+    </div>
+
+    <div class="campo">
+      <label for="p-actividad"><span class="pieza-letra" aria-hidden="true">B</span> Actividad — ¿qué harán los estudiantes?</label>
+      <p class="ayuda-campo">Describe la tarea paso a paso, en lenguaje sencillo.</p>
+      <textarea id="p-actividad" rows="4" placeholder="Ej.: En parejas, consultarán datos de temperatura, los organizarán en una hoja de cálculo, crearán una gráfica y grabarán un audio de un minuto con sus conclusiones."></textarea>
+    </div>
+
+    <div class="campo">
+      <label for="p-herramienta">Herramienta digital elegida</label>
+      <p class="ayuda-campo">Una herramienta gratuita o de libre acceso. Ej.: hoja de cálculo en línea, editor de audio, mapa interactivo, procesador de texto colaborativo.</p>
+      <input type="text" id="p-herramienta" placeholder="Ej.: Hojas de cálculo de Google">
+    </div>
+
+    <div class="campo">
+      <label for="p-justificacion">¿Por qué esa herramienta? Justifica con al menos dos criterios</label>
+      <p class="ayuda-campo">Recuerda los cuatro criterios: <strong>propósito, pertinencia, viabilidad y valor agregado</strong>.</p>
+      <textarea id="p-justificacion" rows="4" placeholder="Ej.: La elijo porque permite a los estudiantes crear sus propias gráficas (propósito) y funciona en los equipos del colegio sin instalación (viabilidad). Además…"></textarea>
+    </div>
+
+    <div class="campo">
+      <label for="p-evaluacion"><span class="pieza-letra" aria-hidden="true">C</span> Evaluación — ¿cómo sabrás que aprendieron?</label>
+      <p class="ayuda-campo">Qué evidencia recogerás y con qué criterios la valorarás.</p>
+      <textarea id="p-evaluacion" rows="3" placeholder="Ej.: Revisaré la gráfica y el audio de cada pareja; valoraré que la gráfica represente bien los datos y que las conclusiones se apoyen en ella."></textarea>
+    </div>
+
+    <p class="nota">Todo lo que escribes se guarda automáticamente en este dispositivo.</p>
+  </form>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <button class="btn" data-goto="m2-casos"><span aria-hidden="true">←</span> Anterior</button>
+    <button class="btn btn-principal" data-goto="m3-revision">Revisar mi diseño <span aria-hidden="true">→</span></button>
+  </nav>
+</section>
+
+<!-- ============ PASO 7 · MOMENTO 3: REVISIÓN Y CIERRE ============ -->
+<section class="paso momento-3" id="paso-m3-revision" data-paso="m3-revision" hidden>
+  <p class="etiqueta">Momento 3 · Crear</p>
+  <h2>Verifica tu diseño con la lista de criterios</h2>
+  <p>Antes de dar por terminada tu actividad, compárala con esta lista. Marca solo lo que de verdad se cumpla en tu texto; si algo no se cumple, regresa con <strong>Anterior</strong> y ajústalo.</p>
+
+  <div class="lista-cotejo" id="lista-cotejo">
+    <label class="cotejo-item"><input type="checkbox" data-cotejo="c1"> <span>Mi objetivo dice qué podrán hacer los estudiantes, en forma observable.</span></label>
+    <label class="cotejo-item"><input type="checkbox" data-cotejo="c2"> <span>La herramienta elegida sirve a ese objetivo (propósito), no al revés.</span></label>
+    <label class="cotejo-item"><input type="checkbox" data-cotejo="c3"> <span>Justifiqué la herramienta con al menos dos criterios.</span></label>
+    <label class="cotejo-item"><input type="checkbox" data-cotejo="c4"> <span>La herramienta es viable en el colegio: gratuita o de libre acceso, y funciona con sus equipos y conectividad.</span></label>
+    <label class="cotejo-item"><input type="checkbox" data-cotejo="c5"> <span>La actividad aprovecha algo que sin tecnología no se podría hacer igual (valor agregado).</span></label>
+    <label class="cotejo-item"><input type="checkbox" data-cotejo="c6"> <span>La evaluación mira precisamente lo que el objetivo promete.</span></label>
+  </div>
+  <div class="resultado" id="resultado-cotejo" aria-live="polite"></div>
+
+  <h2>Descarga tu actividad</h2>
+  <p>Tu producto es la evidencia de este recorrido. Descárgala y compártela con el docente insignia: recibirás retroalimentación sobre tu diseño en los espacios de formación institucional, y podrás contrastarla con las actividades de tus pares.</p>
+  <div class="acciones-descarga">
+    <button class="btn btn-principal" id="btn-descargar">Descargar mi actividad</button>
+    <button class="btn" id="btn-imprimir">Imprimir / guardar como PDF</button>
+  </div>
+  <p class="nota">El archivo descargado también sirve para trabajar fuera de línea.</p>
+
+  <h2>Para cerrar: reconoce tu aprendizaje</h2>
+  <p>Tómate un momento para responder, aunque sea en una libreta o en voz alta:</p>
+  <ul class="reflexion">
+    <li><strong>¿Qué comprendí?</strong> ¿Cuál es, en tus palabras, la diferencia entre usar tecnología de apoyo y diseñar con TAC?</li>
+    <li><strong>¿Qué cambió en mi forma de pensar?</strong> ¿Cómo elegías las herramientas antes y cómo lo harás ahora?</li>
+    <li><strong>¿Qué necesito seguir fortaleciendo?</strong> ¿El manejo de las herramientas? ¿La evaluación de los resultados?</li>
+  </ul>
+
+  <div class="destacado">
+    <p class="destacado-titulo">¿Dónde usarás esto ahora?</p>
+    <p>En tu próxima planeación de clase: aplica los cuatro criterios cada vez que decidas usar tecnología. También en los grupos focales y espacios de formación del proyecto, donde contrastarás tu diseño con el de otros docentes, y al ajustar tus actividades para atender la diversidad de tu grupo de estudiantes.</p>
+  </div>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <button class="btn" data-goto="m3-plantilla"><span aria-hidden="true">←</span> Anterior</button>
+    <button class="btn btn-principal" data-goto="creditos">Finalizar <span aria-hidden="true">→</span></button>
+  </nav>
+</section>
+
+<!-- ============ PASO 8 · CRÉDITOS ============ -->
+<section class="paso" id="paso-creditos" data-paso="creditos" hidden>
+  <p class="etiqueta">Créditos</p>
+  <h2>Sobre este recurso</h2>
+  <p><strong>Del TIC al TAC: diseña tu actividad de clase con propósito pedagógico</strong> es un Objeto Virtual de Aprendizaje creado por el Grupo 9 de la Maestría en Innovación Educativa Mediada por TIC (MITE), Universidad El Bosque, como parte de la estrategia de formación del proyecto de innovación para el Colegio Colsubsidio Maiporé (2027).</p>
+
+  <h3>Autoría</h3>
+  <p>Grupo 9 MITE: Angie Lizeth, Tania, Daniel, Germán Andrés Gómez Rodríguez y Omaira María del Pilar Ramírez.</p>
+
+  <h3>Fundamentos del diseño</h3>
+  <ul class="fuentes">
+    <li>Continuo TIC–TAC–TEP: Área Moreira, M. (2010). <em>El proceso de integración y uso pedagógico de las TIC en los centros educativos.</em> Revista de Educación, 352.</li>
+    <li>Modelo TPACK: Mishra, P., y Koehler, M. J. (2006). <em>Technological pedagogical content knowledge: A framework for teacher knowledge.</em> Teachers College Record, 108(6).</li>
+    <li>Diseño Universal para el Aprendizaje (DUA): CAST (2018).</li>
+    <li>Comunidad de Indagación (CoI): Garrison, Anderson y Archer (2000).</li>
+    <li>Modelo SAMR: Puentedura, R. (2010).</li>
+  </ul>
+
+  <h3>Licencia</h3>
+  <p class="licencia">
+    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="currentColor" stroke-width="2"/><text x="16" y="21" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor">CC</text></svg>
+    Este recurso se comparte con licencia <strong>Creative Commons Atribución–NoComercial–CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</strong>. Puedes consultarlo, compartirlo, reutilizarlo, adaptarlo y redistribuirlo, siempre que des crédito a los autores, no lo uses con fines comerciales y compartas tus adaptaciones con la misma licencia.
+  </p>
+
+  <div class="destacado cierre-final">
+    <p class="destacado-titulo">Terminaste el recorrido</p>
+    <p>Llevas contigo una actividad diseñada y un criterio nuevo para mirar la tecnología en tu aula. El siguiente paso ocurre fuera de esta pantalla: socializa tu diseño, recibe retroalimentación y llévalo a tu clase.</p>
+  </div>
+
+  <nav class="navegacion" aria-label="Navegación del paso">
+    <button class="btn" data-goto="m3-revision"><span aria-hidden="true">←</span> Anterior</button>
+    <button class="btn" data-goto="bienvenida">Volver al inicio</button>
+  </nav>
+</section>
+
+</main>
+
+<!-- Área de impresión de la actividad -->
+<div id="area-impresion" aria-hidden="true"></div>
+
+<script src="js/app.js"></script>
+</body>
 </html>
