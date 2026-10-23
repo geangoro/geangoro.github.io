@@ -46,12 +46,17 @@
     <li>En los ejercicios puedes <strong>reintentar</strong> todas las veces que necesites; equivocarse hace parte del aprendizaje.</li>
     <li>Las palabras con <span class="glosario-muestra">subrayado punteado</span> tienen una definición: púlsalas para verla.</li>
     <li>Tu avance y tus respuestas se guardan solo en este dispositivo; puedes cerrar y continuar después.</li>
+    <li>Después de abrirlo una vez con internet, el recurso funciona <strong>sin conexión</strong> en este mismo navegador.</li>
+    <li>Puedes usar el botón «atrás» del navegador o del celular para volver al paso anterior. La tecla <kbd>Esc</kbd> cierra los paneles.</li>
   </ul>
   <p class="panel-titulo">Glosario</p>
   <dl class="glosario" id="glosario-lista"></dl>
+  <p class="panel-titulo">¿Usas un computador compartido?</p>
+  <p class="panel-nota">Al terminar, borra tu avance y tus respuestas de este dispositivo para que la siguiente persona empiece de cero.</p>
+  <button type="button" class="btn btn-pequeno" id="btn-reiniciar">Borrar mi avance y empezar de nuevo</button>
 </div>
 
-<main id="contenido">
+<main id="contenido" tabindex="-1">
 
 <!-- ============ PASO 0 · BIENVENIDA ============ -->
 <section class="paso" id="paso-bienvenida" data-paso="bienvenida">
@@ -59,10 +64,17 @@
   <h1>Del TIC al <abbr title="Tecnologías para el Aprendizaje y el Conocimiento">TAC</abbr></h1>
   <p class="subtitulo">Diseña tu actividad de clase con propósito pedagógico</p>
 
-  <div class="video-placeholder" role="img" aria-label="Espacio reservado para el video de bienvenida">
-    <svg viewBox="0 0 64 64" width="48" height="48" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="3"/><path d="M26 20 L46 32 L26 44 Z" fill="currentColor"/></svg>
-    <p>Aquí encontrarás un video corto de bienvenida.<br><span class="nota">(En esta versión de prueba, el video se agregará próximamente.)</span></p>
-  </div>
+  <!-- Video de bienvenida. Para agregarlo, pega en data-video la URL de
+       inserción (por ejemplo https://www.youtube-nocookie.com/embed/ID).
+       Mientras esté vacío, solo se muestra la versión en texto. -->
+  <figure class="bienvenida-medio">
+    <div class="video-marco" id="video-bienvenida" data-video="" hidden></div>
+    <figcaption class="mensaje-texto">
+      <p class="destacado-titulo" id="titulo-mensaje">Mensaje de bienvenida</p>
+      <p>Hola, colega. Sabemos que ya usas tecnología en tus clases: proyectas, muestras, buscas información con tus estudiantes. Este recurso no te va a pedir que aprendas decenas de aplicaciones. Te propone algo más sencillo y más poderoso: <strong>decidir con criterio</strong> cuándo y para qué usar una herramienta digital.</p>
+      <p>En el camino reconocerás cómo usas hoy la tecnología, analizarás casos de clase y terminarás con una actividad diseñada por ti, lista para llevar a tu aula y compartir con tus colegas.</p>
+    </figcaption>
+  </figure>
 
   <p>Este recurso hace parte de la estrategia de formación docente del <strong>Colegio Colsubsidio Maiporé</strong>. Está pensado para ti, que enseñas en sexto o séptimo y usas tecnología en tu clase, pero quisieras sacarle más provecho pedagógico.</p>
 
@@ -77,7 +89,8 @@
     <li><strong>Momento 2 · Aprender y practicar.</strong> Conocerás criterios para elegir herramientas y analizarás casos de clase reales.</li>
     <li><strong>Momento 3 · Crear.</strong> Diseñarás tu propia actividad con una plantilla guiada y reflexionarás sobre lo aprendido.</li>
   </ol>
-  <p class="nota">Tiempo estimado: 60 a 90 minutos. No necesitas terminar de una vez: tu avance se guarda.</p>
+  <p>No todos partimos del mismo lugar. Al final del Momento 1, según tu autodiagnóstico, te sugeriremos una ruta: hacer el recorrido completo o ir directo a lo que más necesitas.</p>
+  <p class="nota">Tiempo estimado: 60 a 90 minutos. No necesitas terminar de una vez: tu avance se guarda. Después de abrirlo una vez con internet, también funciona sin conexión en este dispositivo.</p>
 
   <nav class="navegacion" aria-label="Navegación del paso">
     <span></span>
@@ -281,6 +294,7 @@
   <p class="etiqueta">Momento 3 · Crear</p>
   <h2>Diseña tu actividad de enseñanza con TAC</h2>
   <p>Completa la plantilla pensando en una clase real de tu asignatura, de sexto o séptimo. Escribe sin miedo: es un borrador de trabajo que luego contrastarás con tus pares y con el docente insignia en los espacios de formación.</p>
+  <p class="nota">¿Prefieres trabajar en papel o sin conexión? <button type="button" class="enlace-boton" id="btn-plantilla-blanco">Imprime la plantilla en blanco o guárdala como PDF</button>.</p>
 
   <form id="form-plantilla" class="plantilla">
     <div class="campo">
@@ -345,8 +359,15 @@
 <!-- ============ PASO 7 · MOMENTO 3: REVISIÓN Y CIERRE ============ -->
 <section class="paso momento-3" id="paso-m3-revision" data-paso="m3-revision" hidden>
   <p class="etiqueta">Momento 3 · Crear</p>
-  <h2>Verifica tu diseño con la lista de criterios</h2>
-  <p>Antes de dar por terminada tu actividad, compárala con esta lista. Marca solo lo que de verdad se cumpla en tu texto; si algo no se cumple, regresa con <strong>Anterior</strong> y ajústalo.</p>
+  <h2>Revisa tu diseño</h2>
+  <p>Primero, una revisión automática de tu borrador. Luego, tu propia verificación con la lista de criterios.</p>
+
+  <h3>Retroalimentación automática de tu borrador</h3>
+  <div class="retro-borrador" id="retro-borrador" aria-live="polite"></div>
+  <p class="nota">Esta revisión es orientativa: busca palabras clave en lo que escribiste, no reemplaza tu criterio ni la retroalimentación del docente insignia.</p>
+
+  <h3>Verifica con la lista de criterios</h3>
+  <p>Compara tu actividad con esta lista. Marca solo lo que de verdad se cumpla en tu texto; si algo no se cumple, regresa con <strong>Anterior</strong> y ajústalo.</p>
 
   <div class="lista-cotejo" id="lista-cotejo">
     <label class="cotejo-item"><input type="checkbox" data-cotejo="c1"> <span>Mi objetivo dice qué podrán hacer los estudiantes, en forma observable.</span></label>
@@ -361,10 +382,10 @@
   <h2>Descarga tu actividad</h2>
   <p>Tu producto es la evidencia de este recorrido. Descárgala y compártela con el docente insignia: recibirás retroalimentación sobre tu diseño en los espacios de formación institucional, y podrás contrastarla con las actividades de tus pares.</p>
   <div class="acciones-descarga">
-    <button class="btn btn-principal" id="btn-descargar">Descargar mi actividad</button>
-    <button class="btn" id="btn-imprimir">Imprimir / guardar como PDF</button>
+    <button class="btn btn-principal" id="btn-imprimir">Guardar como PDF / imprimir</button>
+    <button class="btn" id="btn-descargar">Descargar en texto (.txt)</button>
   </div>
-  <p class="nota">El archivo descargado también sirve para trabajar fuera de línea.</p>
+  <p class="nota">Para guardar en PDF, en la ventana de impresión elige «Guardar como PDF» como destino. El archivo de texto se abre en cualquier equipo, incluso sin conexión.</p>
 
   <h2>Para cerrar: reconoce tu aprendizaje</h2>
   <p>Tómate un momento para responder, aunque sea en una libreta o en voz alta:</p>
@@ -394,19 +415,44 @@
   <h3>Autoría</h3>
   <p>Grupo 9 MITE: Angie Lizeth, Tania, Daniel, Germán Andrés Gómez Rodríguez y Omaira María del Pilar Ramírez.</p>
 
-  <h3>Fundamentos del diseño</h3>
+  <h3>Cómo se diseñó este recurso</h3>
+  <p>Estas son las decisiones que orientaron el diseño y dónde se ven dentro del recorrido:</p>
+  <dl class="decisiones">
+    <dt>Para quién</dt>
+    <dd>Docentes de sexto y séptimo del Colegio Colsubsidio Maiporé con un nivel básico de apropiación de las TAC. Por eso el lenguaje es sencillo, no técnico, y cada paso trae instrucciones concretas.</dd>
+    <dt>Contenido, pedagogía y tecnología juntos (TPACK)</dt>
+    <dd>El recorrido integra tres saberes: la diferencia entre uso instrumental y uso pedagógico de la tecnología, los criterios para elegir herramientas según el propósito, y las piezas de una actividad (objetivo, actividad y evaluación). Se aprenden analizando casos, practicando y creando.</dd>
+    <dt>Varias formas de acceder y avanzar (DUA)</dt>
+    <dd>Navegación simple con menú y botón «atrás»; glosario siempre disponible; mensaje de bienvenida en texto (equivalente al video); ruta sugerida según el autodiagnóstico de cada docente; contraste alto, tipografía de alta legibilidad y uso completo con teclado y lector de pantalla.</dd>
+    <dt>Aprender con otros (Comunidad de Indagación)</dt>
+    <dd>Dentro del recurso: casos con criterios de análisis, práctica guiada y retroalimentación automática, y creación de la actividad con plantilla. Fuera del recurso: socialización con pares en los espacios de formación institucional y retroalimentación del docente insignia sobre el diseño y su aplicación en el aula.</dd>
+    <dt>Lo que la tecnología transforma (SAMR: modificación)</dt>
+    <dd>Interactividad en los casos, retroalimentación inmediata en cada decisión y en el borrador, personalización de la ruta y acceso flexible desde cualquier dispositivo.</dd>
+    <dt>Condiciones reales de acceso</dt>
+    <dd>Recurso liviano, sin registro ni instalación. Funciona sin conexión después de la primera visita, permite imprimir la plantilla en blanco y guardar la actividad en PDF o texto. Ningún contenido esencial depende de estar conectado en tiempo real.</dd>
+  </dl>
+
+  <h3>Referencias</h3>
   <ul class="fuentes">
-    <li>Continuo TIC–TAC–TEP: Área Moreira, M. (2010). <em>El proceso de integración y uso pedagógico de las TIC en los centros educativos.</em> Revista de Educación, 352.</li>
-    <li>Modelo TPACK: Mishra, P., y Koehler, M. J. (2006). <em>Technological pedagogical content knowledge: A framework for teacher knowledge.</em> Teachers College Record, 108(6).</li>
-    <li>Diseño Universal para el Aprendizaje (DUA): CAST (2018).</li>
-    <li>Comunidad de Indagación (CoI): Garrison, Anderson y Archer (2000).</li>
-    <li>Modelo SAMR: Puentedura, R. (2010).</li>
+    <li>Área Moreira, M. (2010). El proceso de integración y uso pedagógico de las TIC en los centros educativos. Un estudio de casos. <em>Revista de Educación</em>, 352, 77–97.</li>
+    <li>CAST. (2018). <em>Universal Design for Learning Guidelines version 2.2</em>. <a href="https://udlguidelines.cast.org" rel="noopener">https://udlguidelines.cast.org</a></li>
+    <li>Garrison, D. R., Anderson, T., y Archer, W. (2000). Critical inquiry in a text-based environment: Computer conferencing in higher education. <em>The Internet and Higher Education</em>, 2(2–3), 87–105.</li>
+    <li>Mishra, P., y Koehler, M. J. (2006). Technological pedagogical content knowledge: A framework for teacher knowledge. <em>Teachers College Record</em>, 108(6), 1017–1054.</li>
+    <li>Puentedura, R. R. (2010). <em>SAMR and TPCK: Intro to advanced practice</em>. Hippasus.</li>
+  </ul>
+
+  <h3>Recursos utilizados</h3>
+  <ul class="fuentes">
+    <li>Textos, casos de clase, infografía del continuo TIC–TAC–TEP e íconos: elaboración propia del Grupo 9 MITE. Los casos y los nombres de docentes que aparecen en ellos son ficticios.</li>
+    <li>Tipografía <em>Atkinson Hyperlegible</em>, de Braille Institute of America, con licencia SIL Open Font License 1.1.</li>
+    <li>Tipografía <em>Fraunces</em>, de Undercase Type, con licencia SIL Open Font License 1.1.</li>
+    <li>Las tipografías se cargan desde Google Fonts. Si no hay conexión, se usan las fuentes del sistema.</li>
   </ul>
 
   <h3>Licencia</h3>
   <p class="licencia">
     <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="currentColor" stroke-width="2"/><text x="16" y="21" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor">CC</text></svg>
-    Este recurso se comparte con licencia <strong>Creative Commons Atribución–NoComercial–CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</strong>. Puedes consultarlo, compartirlo, reutilizarlo, adaptarlo y redistribuirlo, siempre que des crédito a los autores, no lo uses con fines comerciales y compartas tus adaptaciones con la misma licencia.
+    <span>Este recurso se comparte con licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="license noopener"><strong>Creative Commons Atribución–NoComercial–CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</strong></a>. Puedes consultarlo, compartirlo, reutilizarlo, adaptarlo y redistribuirlo, siempre que des crédito a los autores, no lo uses con fines comerciales y compartas tus adaptaciones con la misma licencia.</span>
   </p>
 
   <div class="destacado cierre-final">

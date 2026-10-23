@@ -173,13 +173,18 @@ abbr{text-decoration:underline dotted; text-underline-offset:3px}
 .recorrido-resumen{padding-left:1.4rem}
 .recorrido-resumen li{margin:.55rem 0}
 
-.video-placeholder{
-  display:flex; gap:1rem; align-items:center;
-  border:2px dashed var(--tinta-suave); border-radius:.6rem;
-  padding:1.4rem 1.5rem; margin:1.4rem 0;
-  color:var(--tinta-suave);
+/* Bienvenida: video opcional + su versión en texto */
+.bienvenida-medio{margin:1.4rem 0}
+.video-marco{position:relative; aspect-ratio:16/9; margin-bottom:1rem; border-radius:.6rem; overflow:hidden; background:var(--fondo-suave)}
+.video-marco iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+.mensaje-texto{
+  background:var(--fondo-suave);
+  border:1px solid var(--borde);
+  border-left:.35rem solid var(--acento);
+  border-radius:.4rem;
+  padding:1.1rem 1.3rem;
 }
-.video-placeholder p{margin:0}
+.mensaje-texto p:last-child{margin-bottom:0}
 
 .infografia{margin:1.8rem 0}
 .infografia svg{width:100%; height:auto; display:block}
@@ -262,6 +267,27 @@ abbr{text-decoration:underline dotted; text-underline-offset:3px}
   border-radius:.4rem;
 }
 .resultado strong{display:block; margin-bottom:.3rem}
+.resultado p{margin:.4rem 0}
+.resultado .nota strong, .retro-lista strong{display:inline; margin:0}
+.ruta-sugerida{font-weight:700; border-left:3px solid var(--m1); padding-left:.6rem}
+.ruta-acciones{display:flex; flex-wrap:wrap; gap:.6rem; margin:.8rem 0 .4rem}
+
+/* ---------- Retroalimentación automática del borrador ---------- */
+.retro-borrador{margin:.8rem 0}
+.retro-borrador:empty{display:none}
+.retro-resumen{margin:0 0 .6rem}
+.retro-lista{list-style:none; margin:0; padding:0; display:grid; gap:.5rem}
+.retro-item{
+  display:flex; gap:.7rem; align-items:flex-start;
+  padding:.6rem .9rem; border-radius:.45rem; font-size:.96rem;
+  border:1px solid var(--borde); border-left:.35rem solid var(--borde);
+  background:var(--fondo);
+}
+.retro-item.ok{border-left-color:var(--m3); background:#eef4ef}
+.retro-item.mejora{border-left-color:var(--m2); background:#eef1f7}
+.retro-item.falta{border-left-color:var(--m1); background:#f9efe8}
+.retro-icono{font-weight:700; min-width:1.1rem; text-align:center}
+.retro-etiqueta{font-weight:700}
 
 /* ---------- Casos ---------- */
 .caso{
@@ -338,7 +364,12 @@ abbr{text-decoration:underline dotted; text-underline-offset:3px}
 .reflexion li{margin:.7rem 0}
 
 .fuentes{padding-left:1.2rem}
-.fuentes li{margin:.5rem 0; font-size:.95rem}
+.fuentes li{margin:.5rem 0; font-size:.95rem; overflow-wrap:anywhere}
+.decisiones{margin:.8rem 0}
+.decisiones dt{font-weight:700; margin-top:.9rem}
+.decisiones dd{margin:.2rem 0 0; font-size:.97rem; color:var(--tinta-suave)}
+a{color:var(--m2); text-underline-offset:3px}
+a:hover{color:var(--tinta)}
 .licencia{display:flex; gap:.9rem; align-items:flex-start}
 .licencia svg{flex-shrink:0; margin-top:.2rem}
 .cierre-final{border-left-color:var(--m3)}
@@ -362,6 +393,19 @@ abbr{text-decoration:underline dotted; text-underline-offset:3px}
   border:1px solid var(--tinta);
 }
 .btn-principal:hover{background:#33332f}
+.btn-pequeno{font-size:.9rem; padding:.4rem 1rem; margin-top:.4rem}
+.enlace-boton{
+  background:none; border:none; padding:0; font:inherit; cursor:pointer;
+  color:var(--m2); text-decoration:underline; text-underline-offset:3px;
+}
+.enlace-boton:hover{color:var(--tinta)}
+kbd{font-family:inherit; font-size:.85em; border:1px solid var(--tinta-suave); border-radius:.25rem; padding:0 .3rem}
+
+/* Definición emergente de un término del glosario */
+.panel.definicion{position:absolute; top:auto; right:auto; max-width:24rem}
+.panel.definicion p{margin:.2rem 0}
+
+main:focus{outline:none}
 
 /* Foco visible global (accesibilidad) */
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
@@ -386,6 +430,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   #area-impresion h2{font-size:1.1rem; margin-top:1.2rem}
   #area-impresion p{margin:.3rem 0}
   #area-impresion .doc-meta{color:#444; font-size:.9rem}
+  #area-impresion .doc-ayuda{color:#444; font-size:.88rem; font-style:italic}
+  #area-impresion .linea-blanco{height:7rem; border:1px solid #888; border-radius:.3rem; margin:.4rem 0 .8rem}
+  #area-impresion h2{break-after:avoid}
 }
 
 /* ---------- Responsive ---------- */

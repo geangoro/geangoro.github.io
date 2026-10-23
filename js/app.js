@@ -1,10 +1,11 @@
 /* ============================================================
    Del TIC al TAC — OVA · Grupo 9 MITE
-   Lógica: navegación por pasos, progreso persistente, glosario,
-   autodiagnóstico, casos con retroalimentación e intentos
-   múltiples, plantilla con autoguardado, lista de cotejo,
-   descarga e impresión. Sin dependencias externas: funciona
-   sin conexión una vez cargado o descargado.
+   Lógica: navegación por pasos con historial del navegador,
+   progreso persistente, glosario, autodiagnóstico con ruta
+   sugerida, casos con retroalimentación e intentos múltiples,
+   plantilla con autoguardado, retroalimentación automática del
+   borrador, lista de cotejo, descarga e impresión, y modo sin
+   conexión. Sin dependencias externas.
    ============================================================ */
 (function () {
   "use strict";
@@ -12,7 +13,10 @@
   var CLAVE = "ova-tic-tac-v1";
 
   /* ---------- Estado persistente ---------- */
-  var estado = { paso: "bienvenida", maximo: 0, plantilla: {}, cotejo: {}, diagnostico: {} };
+  function estadoInicial() {
+    return { paso: "bienvenida", maximo: 0, plantilla: {}, cotejo: {}, diagnostico: {}, casos: {} };
+  }
+  var estado = estadoInicial();
   try {
     var guardado = localStorage.getItem(CLAVE);
     if (guardado) estado = Object.assign(estado, JSON.parse(guardado));
@@ -20,6 +24,17 @@
 
   function persistir() {
     try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {}
+  }
+
+  function escaparHtml(t) {
+    var s = document.createElement("span");
+    s.textContent = t == null ? "" : String(t);
+    return s.innerHTML;
+  }
+
+  /* Texto en minúsculas y sin tildes, para comparar palabras clave */
+  function normalizar(t) {
+    return (t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   }
 
   /* ---------- Recorrido ---------- */
@@ -31,21 +46,27 @@
     { id: "m2-componentes", nombre: "Momento 2 · Las tres piezas de una actividad" },
     { id: "m2-casos",       nombre: "Momento 2 · Analiza tres casos" },
     { id: "m3-plantilla",   nombre: "Momento 3 · Diseña tu actividad" },
-    { id: "m3-revision",    nombre: "Momento 3 · Verifica, descarga y reflexiona" },
+    { id: "m3-revision",    nombre: "Momento 3 · Revisa, descarga y reflexiona" },
     { id: "creditos",       nombre: "Créditos y licencia" }
   ];
 
+  /* Devuelve -1 si el id no es un paso (por ejemplo, #contenido) */
   function indicePaso(id) {
     for (var i = 0; i < PASOS.length; i++) if (PASOS[i].id === id) return i;
-    return 0;
+    return -1;
   }
 
-  function irA(id, empujarHash) {
+  /* modoHistorial: "push" (por defecto) agrega una entrada al historial
+     para que el botón «atrás» regrese al paso anterior; "replace" la
+     reemplaza; "none" no toca el historial (al responder a «atrás»). */
+  function irA(id, modoHistorial) {
     var idx = indicePaso(id);
-    document.querySelectorAll(".paso").forEach(function (s) { s.hidden = true; });
+    if (idx < 0) return;
     var seccion = document.querySelector('[data-paso="' + id + '"]');
     if (!seccion) return;
+    document.querySelectorAll(".paso").forEach(function (s) { s.hidden = true; });
     seccion.hidden = false;
+    var cambio = estado.paso !== id;
     estado.paso = id;
     if (idx > estado.maximo) estado.maximo = idx;
     persistir();
@@ -56,6 +77,7 @@
     relleno.style.width = pct + "%";
     var cont = document.getElementById("progreso-barra-cont");
     cont.setAttribute("aria-valuenow", pct);
+    cont.setAttribute("aria-valuetext", "Paso " + (idx + 1) + " de " + PASOS.length);
     document.getElementById("progreso-texto").textContent =
       "Paso " + (idx + 1) + " de " + PASOS.length + " · " + PASOS[idx].nombre;
 
@@ -66,55 +88,73 @@
     relleno.style.background = color;
 
     construirMenu();
-    if (empujarHash !== false) {
-      try { history.replaceState(null, "", "#" + id); } catch (e) {}
-    }
+    if (id === "m3-revision") mostrarRetroBorrador();
+
+    var modo = modoHistorial || "push";
+    try {
+      if (modo === "push" && cambio) history.pushState({ paso: id }, "", "#" + id);
+      else if (modo === "replace" || (modo === "push" && !cambio)) history.replaceState({ paso: id }, "", "#" + id);
+    } catch (e) {}
+
     window.scrollTo({ top: 0, behavior: "auto" });
     var titulo = seccion.querySelector("h1, h2");
     if (titulo) { titulo.setAttribute("tabindex", "-1"); titulo.focus({ preventScroll: true }); }
   }
 
-  /* Botones con data-goto */
-  document.querySelectorAll("[data-goto]").forEach(function (b) {
-    b.addEventListener("click", function () { irA(b.getAttribute("data-goto")); });
+  /* Botones con data-goto (delegado: sirve también para los botones
+     que se crean después, como los de la ruta sugerida) */
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-goto]");
+    if (b) irA(b.getAttribute("data-goto"));
+  });
+
+  /* Enlace «Saltar al contenido»: lleva el foco al contenido sin
+     agregar una entrada al historial del navegador */
+  document.querySelector(".saltar").addEventListener("click", function (ev) {
+    ev.preventDefault();
+    var principal = document.getElementById("contenido");
+    principal.focus();
+    principal.scrollIntoView();
   });
 
   /* ---------- Paneles Menú / Ayuda ---------- */
-  function alternarPanel(boton, panel) {
-    var abierto = !panel.hidden;
-    document.querySelectorAll(".panel").forEach(function (p) { p.hidden = true; });
-    document.querySelectorAll(".menu-boton").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
-    if (!abierto) { panel.hidden = false; boton.setAttribute("aria-expanded", "true"); }
-  }
   var botonMenu = document.getElementById("boton-menu");
   var botonAyuda = document.getElementById("boton-ayuda");
   var panelMenu = document.getElementById("panel-menu");
   var panelAyuda = document.getElementById("panel-ayuda");
+
+  function cerrarPaneles() {
+    panelMenu.hidden = true; panelAyuda.hidden = true;
+    botonMenu.setAttribute("aria-expanded", "false");
+    botonAyuda.setAttribute("aria-expanded", "false");
+  }
+  function alternarPanel(boton, panel) {
+    var abierto = !panel.hidden;
+    cerrarPaneles();
+    if (!abierto) { panel.hidden = false; boton.setAttribute("aria-expanded", "true"); }
+  }
   botonMenu.addEventListener("click", function () { alternarPanel(botonMenu, panelMenu); });
   botonAyuda.addEventListener("click", function () { alternarPanel(botonAyuda, panelAyuda); });
   document.addEventListener("click", function (ev) {
-    if (!ev.target.closest(".panel") && !ev.target.closest(".menu-boton")) {
-      panelMenu.hidden = true; panelAyuda.hidden = true;
-      botonMenu.setAttribute("aria-expanded", "false");
-      botonAyuda.setAttribute("aria-expanded", "false");
-    }
+    if (!ev.target.closest(".panel") && !ev.target.closest(".menu-boton")) cerrarPaneles();
   });
 
   function construirMenu() {
     var lista = document.getElementById("lista-pasos");
     lista.innerHTML = "";
+    var actual = indicePaso(estado.paso);
     PASOS.forEach(function (p, i) {
       var li = document.createElement("li");
       var b = document.createElement("button");
+      b.type = "button";
       b.textContent = p.nombre;
-      if (i === indicePaso(estado.paso)) b.className = "actual";
+      if (i === actual) { b.className = "actual"; b.setAttribute("aria-current", "step"); }
       if (i > estado.maximo) {
         b.disabled = true;
         b.title = "Aún no has llegado a este paso";
       } else {
         b.addEventListener("click", function () {
-          panelMenu.hidden = true;
-          botonMenu.setAttribute("aria-expanded", "false");
+          cerrarPaneles();
           irA(p.id);
         });
       }
@@ -123,13 +163,20 @@
     });
   }
 
+  /* ---------- Reiniciar (computadores compartidos) ---------- */
+  document.getElementById("btn-reiniciar").addEventListener("click", function () {
+    if (!window.confirm("Se borrarán tu avance, tus respuestas y tu actividad de este dispositivo. ¿Quieres continuar?")) return;
+    try { localStorage.removeItem(CLAVE); } catch (e) {}
+    location.replace(location.pathname + location.search);
+  });
+
   /* ---------- Glosario ---------- */
   var GLOSARIO = {
     tic: { termino: "TIC (Tecnologías de la Información y la Comunicación)",
       definicion: "Uso de la tecnología como apoyo de la clase: proyectar, mostrar, consultar. La forma de enseñar y aprender no cambia; solo cambia el recurso." },
     tac: { termino: "TAC (Tecnologías para el Aprendizaje y el Conocimiento)",
       definicion: "Uso de la tecnología como medio de aprendizaje: los estudiantes la usan para crear, simular, colaborar o representar lo que entienden. La actividad de aprendizaje se transforma." },
-    tep: { termino: "TEP (Tecnologías para la Empoderación y la Participación)",
+    tep: { termino: "TEP (Tecnologías para el Empoderamiento y la Participación)",
       definicion: "El nivel más amplio del continuo: la tecnología transforma las prácticas y la cultura de toda la comunidad educativa, no solo una clase." },
     proposito: { termino: "Propósito pedagógico",
       definicion: "La razón de aprendizaje que justifica cada decisión de la clase: qué deben lograr los estudiantes y por qué. La herramienta se elige después de definir el propósito, nunca antes." },
@@ -144,36 +191,76 @@
     dl.appendChild(dt); dl.appendChild(dd);
   });
 
-  /* Popover de término en el texto */
+  /* Definición emergente de un término del texto. Se anuncia a los
+     lectores de pantalla y se cierra con Esc o con un clic fuera. */
   var popover = document.createElement("div");
-  popover.className = "panel";
-  popover.setAttribute("role", "note");
+  popover.className = "panel definicion";
+  popover.id = "definicion-termino";
+  popover.setAttribute("role", "status");
   popover.style.display = "none";
-  popover.style.position = "absolute";
   document.body.appendChild(popover);
+  var terminoActivo = null;
+
+  function cerrarDefinicion(devolverFoco) {
+    if (popover.style.display === "none") return;
+    popover.style.display = "none";
+    if (terminoActivo) {
+      terminoActivo.setAttribute("aria-expanded", "false");
+      if (devolverFoco) terminoActivo.focus();
+    }
+    terminoActivo = null;
+  }
 
   document.querySelectorAll(".termino").forEach(function (b) {
+    b.setAttribute("aria-expanded", "false");
+    b.setAttribute("aria-controls", "definicion-termino");
     b.addEventListener("click", function (ev) {
       ev.stopPropagation();
+      if (terminoActivo === b) { cerrarDefinicion(false); return; }
+      cerrarDefinicion(false);
       var g = GLOSARIO[b.getAttribute("data-termino")];
       if (!g) return;
-      popover.innerHTML = "<p class='panel-titulo'>" + g.termino + "</p><p style='margin:.2rem 0'>" + g.definicion + "</p>";
+      popover.innerHTML = "<p class='panel-titulo'>" + escaparHtml(g.termino) + "</p><p>" + escaparHtml(g.definicion) + "</p>";
       var r = b.getBoundingClientRect();
-      popover.style.top = (r.bottom + window.scrollY + 8) + "px";
-      popover.style.left = Math.max(10, Math.min(r.left, window.innerWidth - 400)) + "px";
-      popover.hidden = false;
       popover.style.display = "block";
+      var ancho = popover.offsetWidth;
+      popover.style.top = (r.bottom + window.scrollY + 8) + "px";
+      popover.style.left = Math.max(10, Math.min(r.left + window.scrollX, window.scrollX + document.documentElement.clientWidth - ancho - 10)) + "px";
+      b.setAttribute("aria-expanded", "true");
+      terminoActivo = b;
     });
   });
   document.addEventListener("click", function (ev) {
-    if (!ev.target.closest(".termino")) popover.style.display = "none";
-  });
-  document.addEventListener("keydown", function (ev) {
-    if (ev.key === "Escape") popover.style.display = "none";
+    if (!ev.target.closest(".termino") && !ev.target.closest(".definicion")) cerrarDefinicion(false);
   });
 
-  /* ---------- Autodiagnóstico ---------- */
+  /* Esc cierra la definición y los paneles, y devuelve el foco */
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key !== "Escape") return;
+    if (popover.style.display !== "none") { cerrarDefinicion(true); return; }
+    if (!panelMenu.hidden) { cerrarPaneles(); botonMenu.focus(); return; }
+    if (!panelAyuda.hidden) { cerrarPaneles(); botonAyuda.focus(); }
+  });
+
+  /* ---------- Video de bienvenida (opcional) ---------- */
+  (function () {
+    var marco = document.getElementById("video-bienvenida");
+    var src = marco && marco.getAttribute("data-video");
+    if (!src) return;
+    var iframe = document.createElement("iframe");
+    iframe.src = src;
+    iframe.title = "Video de bienvenida al recurso Del TIC al TAC";
+    iframe.loading = "lazy";
+    iframe.allow = "accelerometer; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowFullscreen = true;
+    marco.appendChild(iframe);
+    marco.hidden = false;
+    document.getElementById("titulo-mensaje").textContent = "Versión en texto del video";
+  })();
+
+  /* ---------- Autodiagnóstico y ruta sugerida ---------- */
   var ESCALA = ["Nunca", "A veces", "Casi siempre", "Siempre"];
+  var PREGUNTAS = ["d1", "d2", "d3", "d4", "d5"];
   document.querySelectorAll(".opciones-escala").forEach(function (cont) {
     var nombre = cont.getAttribute("data-pregunta");
     ESCALA.forEach(function (etiqueta, i) {
@@ -183,42 +270,74 @@
       var input = document.createElement("input");
       input.type = "radio"; input.name = nombre; input.id = id; input.value = i + 1;
       if (estado.diagnostico[nombre] === i + 1) input.checked = true;
+      input.addEventListener("change", function () {
+        estado.diagnostico[nombre] = i + 1;
+        persistir();
+      });
       label.appendChild(input);
       label.appendChild(document.createTextNode(etiqueta));
       cont.appendChild(label);
     });
   });
 
-  document.getElementById("form-diagnostico").addEventListener("submit", function (ev) {
-    ev.preventDefault();
+  var RUTAS = {
+    inicial: {
+      titulo: "Punto de partida: uso ocasional de apoyo",
+      texto: "Hoy la tecnología aparece en tu clase sobre todo para mostrar contenido. Es un inicio completamente normal —y es exactamente para lo que existe este recurso—. En el Momento 2 encontrarás criterios sencillos para dar el siguiente paso sin necesidad de ser un experto en herramientas.",
+      ruta: "Ruta sugerida: haz el recorrido completo, paso a paso.",
+      botones: [{ paso: "m2-criterios", texto: "Seguir con los cuatro criterios", principal: true }]
+    },
+    transicion: {
+      titulo: "Punto de partida: en transición",
+      texto: "Ya hay momentos en que tus estudiantes hacen cosas con la tecnología, aunque no siempre con un propósito planeado. Tu reto no es empezar de cero, sino hacer conscientes las decisiones: elegir la herramienta después del objetivo y saber explicar por qué.",
+      ruta: "Ruta sugerida: repasa los cuatro criterios y las tres piezas, o si ya los conoces, ve directo a analizar los casos.",
+      botones: [
+        { paso: "m2-criterios", texto: "Repasar los criterios", principal: true },
+        { paso: "m2-casos", texto: "Ir directo a los casos" }
+      ]
+    },
+    integracion: {
+      titulo: "Punto de partida: integración en marcha",
+      texto: "Ya integras la tecnología con intención pedagógica en varias de tus clases. Este recurso te servirá para sistematizar lo que haces, ganar argumentos para justificar tus diseños y compartir tu experiencia con tus colegas en los espacios de formación.",
+      ruta: "Ruta sugerida: pon a prueba tu criterio con los casos o pasa directo a diseñar tu actividad.",
+      botones: [
+        { paso: "m2-casos", texto: "Ir directo a los casos", principal: true },
+        { paso: "m3-plantilla", texto: "Ir directo a diseñar mi actividad" }
+      ]
+    }
+  };
+
+  function mostrarDiagnostico(desplazar) {
     var total = 0, respondidas = 0;
-    ["d1", "d2", "d3", "d4", "d5"].forEach(function (n) {
+    PREGUNTAS.forEach(function (n) {
       var sel = document.querySelector('input[name="' + n + '"]:checked');
       if (sel) { total += parseInt(sel.value, 10); respondidas++; estado.diagnostico[n] = parseInt(sel.value, 10); }
     });
     persistir();
     var salida = document.getElementById("resultado-diagnostico");
-    if (respondidas < 5) {
-      salida.hidden = false;
-      salida.innerHTML = "<strong>Te faltan preguntas por responder.</strong> Responde las cinco afirmaciones para ver tu resultado.";
+    salida.hidden = false;
+    if (respondidas < PREGUNTAS.length) {
+      salida.innerHTML = "<strong>Te faltan " + (PREGUNTAS.length - respondidas) + " afirmaciones por responder.</strong>Responde las cinco para ver tu resultado y tu ruta sugerida.";
+      var primera = PREGUNTAS.filter(function (n) { return !document.querySelector('input[name="' + n + '"]:checked'); })[0];
+      if (primera && desplazar) document.getElementById(primera + "-0").focus();
       return;
     }
-    var titulo, texto;
-    if (total <= 9) {
-      titulo = "Punto de partida: uso ocasional de apoyo";
-      texto = "Hoy la tecnología aparece en tu clase sobre todo para mostrar contenido. Es un inicio completamente normal —y es exactamente para lo que existe este recurso—. En el Momento 2 encontrarás criterios sencillos para dar el siguiente paso sin necesidad de ser un experto en herramientas.";
-    } else if (total <= 14) {
-      titulo = "Punto de partida: en transición";
-      texto = "Ya hay momentos en que tus estudiantes hacen cosas con la tecnología, aunque no siempre con un propósito planeado. Tu reto no es empezar de cero, sino hacer conscientes las decisiones: elegir la herramienta después del objetivo y saber explicar por qué.";
-    } else {
-      titulo = "Punto de partida: integración en marcha";
-      texto = "Ya integras la tecnología con intención pedagógica en varias de tus clases. Este recurso te servirá para sistematizar lo que haces, ganar argumentos para justificar tus diseños y compartir tu experiencia con tus colegas en los espacios de formación.";
-    }
-    salida.hidden = false;
-    salida.innerHTML = "<strong>" + titulo + "</strong>" + texto +
-      "<p class='nota' style='margin:.6rem 0 0'>Este resultado es orientativo y privado: solo lo ves tú y nadie lo registra.</p>";
-    salida.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    var r = total <= 9 ? RUTAS.inicial : (total <= 14 ? RUTAS.transicion : RUTAS.integracion);
+    var botones = r.botones.map(function (b) {
+      return "<button type='button' class='btn" + (b.principal ? " btn-principal" : "") + "' data-goto='" + b.paso + "'>" + escaparHtml(b.texto) + "&nbsp;<span aria-hidden='true'>→</span></button>";
+    }).join("");
+    salida.innerHTML = "<strong>" + r.titulo + "</strong><p>" + r.texto + "</p>" +
+      "<p class='ruta-sugerida'>" + r.ruta + "</p>" +
+      "<div class='ruta-acciones'>" + botones + "</div>" +
+      "<p class='nota'>Los demás pasos siguen disponibles en el <strong>Menú</strong>. Este resultado es orientativo y privado: solo lo ves tú y nadie lo registra.</p>";
+    if (desplazar) salida.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  document.getElementById("form-diagnostico").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    mostrarDiagnostico(true);
   });
+  if (PREGUNTAS.every(function (n) { return estado.diagnostico[n]; })) mostrarDiagnostico(false);
 
   /* ---------- Casos con retroalimentación ---------- */
   var CASOS = [
@@ -272,8 +391,6 @@
     }
   ];
 
-  var casosResueltos = {};
-
   function construirCasos() {
     var cont = document.getElementById("casos-contenedor");
     cont.innerHTML = "";
@@ -297,16 +414,19 @@
 
       var preg = document.createElement("p");
       preg.className = "caso-pregunta";
+      preg.id = "caso-pregunta-" + idx;
       preg.textContent = caso.pregunta;
 
       var ops = document.createElement("div");
       ops.className = "caso-opciones";
+      ops.setAttribute("role", "group");
+      ops.setAttribute("aria-labelledby", preg.id);
       caso.opciones.forEach(function (op, oi) {
         var b = document.createElement("button");
         b.type = "button";
         b.className = "caso-opcion";
         b.textContent = op.texto;
-        b.addEventListener("click", function () { responderCaso(idx, oi, div); });
+        b.addEventListener("click", function () { responderCaso(idx, oi, div, true); });
         ops.appendChild(b);
       });
 
@@ -321,10 +441,17 @@
       div.appendChild(cab); div.appendChild(esc); div.appendChild(preg);
       div.appendChild(ops); div.appendChild(retro); div.appendChild(acciones);
       cont.appendChild(div);
+
+      /* Restaurar casos ya resueltos en visitas anteriores */
+      if (estado.casos[idx]) {
+        var correcta = 0;
+        caso.opciones.forEach(function (op, oi) { if (op.correcta) correcta = oi; });
+        responderCaso(idx, correcta, div, false);
+      }
     });
   }
 
-  function responderCaso(idx, oi, div) {
+  function responderCaso(idx, oi, div, interactivo) {
     var caso = CASOS[idx];
     var op = caso.opciones[oi];
     var retro = div.querySelector(".retroalimentacion");
@@ -333,36 +460,52 @@
 
     botones.forEach(function (b, i) {
       b.disabled = true;
-      if (i === oi) b.classList.add(op.correcta ? "correcta" : "incorrecta");
+      if (i === oi) {
+        b.classList.add(op.correcta ? "correcta" : "incorrecta");
+        b.setAttribute("aria-label", (op.correcta ? "Respuesta correcta: " : "Respuesta elegida, no es la mejor: ") + caso.opciones[i].texto);
+      }
     });
 
     retro.hidden = false;
+    acciones.innerHTML = "";
     if (op.correcta) {
       retro.className = "retroalimentacion exito";
-      retro.innerHTML = "<strong>✔ Bien analizado.</strong>" + op.retro;
-      acciones.innerHTML = "";
-      casosResueltos[idx] = true;
-      if (Object.keys(casosResueltos).length === CASOS.length) {
-        var cierre = document.getElementById("casos-cierre");
-        cierre.hidden = false;
-        cierre.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
+      retro.innerHTML = "<strong>✔ Bien analizado.</strong>" + escaparHtml(op.retro);
+      estado.casos[idx] = true;
+      persistir();
+      actualizarCierreCasos(interactivo);
     } else {
       retro.className = "retroalimentacion reintento";
-      retro.innerHTML = "<strong>Aún no — revisemos el criterio.</strong>" + op.retro;
-      acciones.innerHTML = "";
+      retro.innerHTML = "<strong>Aún no — revisemos el criterio.</strong>" + escaparHtml(op.retro);
       var re = document.createElement("button");
       re.type = "button";
       re.className = "btn";
       re.textContent = "Reintentar este caso";
       re.addEventListener("click", function () {
-        botones.forEach(function (b) { b.disabled = false; b.classList.remove("correcta", "incorrecta"); });
+        botones.forEach(function (b) {
+          b.disabled = false;
+          b.classList.remove("correcta", "incorrecta");
+          b.removeAttribute("aria-label");
+        });
         retro.hidden = true;
         acciones.innerHTML = "";
+        botones[0].focus();
       });
       acciones.appendChild(re);
     }
-    retro.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (interactivo) {
+      retro.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (!op.correcta) acciones.querySelector("button").focus({ preventScroll: true });
+    }
+  }
+
+  function actualizarCierreCasos(desplazar) {
+    var resueltos = CASOS.filter(function (c, i) { return estado.casos[i]; }).length;
+    var cierre = document.getElementById("casos-cierre");
+    if (resueltos === CASOS.length) {
+      cierre.hidden = false;
+      if (desplazar) cierre.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   }
 
   construirCasos();
@@ -373,7 +516,8 @@
     var el = document.getElementById(id);
     if (!el) return;
     if (estado.plantilla[id]) el.value = estado.plantilla[id];
-    el.addEventListener("input", function () {
+    var evento = el.tagName === "SELECT" ? "change" : "input";
+    el.addEventListener(evento, function () {
       estado.plantilla[id] = el.value;
       persistir();
     });
@@ -386,6 +530,116 @@
       d[id] = el ? el.value.trim() : "";
     });
     return d;
+  }
+
+  /* ---------- Retroalimentación automática del borrador ----------
+     Revisión orientativa por palabras clave, alineada con los cuatro
+     criterios y las tres piezas que se trabajan en el Momento 2. */
+  var VERBOS_OBSERVABLES = /\b(resolv|resuelv|explic|crea|cre[ae]n|interpret|compar|argument|disen|identific|clasific|formul|constru|represent|analiz|describ|elabor|produc|propon|calcul|redact|escrib|investig|evalu|justific|organiz|grab|demostr|relacion|distingu|diferenci|model|simul|debat|sintetiz|resum|ejemplific|graf|registr|expon|expli)\w*/g;
+  var VERBOS_VAGOS = /\b(comprend|entiend|entend|conozc|conoc|sab[eir]|aprend|apropi|reflexion)\w*/;
+  var CRITERIOS = [
+    { nombre: "propósito", patron: /proposito|objetivo|para que (los estudiantes|aprendan)|permite (a los estudiantes|que)/ },
+    { nombre: "pertinencia", patron: /pertinen|mejor opcion|se ajusta|adecuad|apropiad|mas sencill/ },
+    { nombre: "viabilidad", patron: /viab|gratuit|gratis|libre acceso|conectividad|equipos|sin instal|sin conexion|celular|funciona en|disponible/ },
+    { nombre: "valor agregado", patron: /valor agregado|sin (la )?tecnologia|no (se )?podria|no (se )?podrian|antes no|aporta|nuevo|nueva|audiencia|colabor|en tiempo real/ }
+  ];
+
+  function revisarBorrador(d) {
+    var items = [];
+    var obj = normalizar(d["p-objetivo"]);
+    var act = normalizar(d["p-actividad"]);
+    var herr = normalizar(d["p-herramienta"]);
+    var just = normalizar(d["p-justificacion"]);
+    var eva = normalizar(d["p-evaluacion"]);
+
+    /* Datos básicos */
+    var faltanDatos = [];
+    if (!d["p-asignatura"]) faltanDatos.push("asignatura");
+    if (!d["p-grado"]) faltanDatos.push("grado");
+    if (faltanDatos.length) items.push({ tipo: "falta", texto: "Completa los datos de la clase: " + faltanDatos.join(" y ") + "." });
+
+    /* A. Objetivo */
+    var verbosObj = obj.match(VERBOS_OBSERVABLES) || [];
+    if (!obj) {
+      items.push({ tipo: "falta", texto: "<strong>Objetivo:</strong> aún está vacío. Empieza por aquí: la herramienta se elige después del objetivo." });
+    } else if (verbosObj.length) {
+      items.push({ tipo: "ok", texto: "<strong>Objetivo:</strong> usa una acción que se puede observar («" + escaparHtml(verbosObj[0]) + "»). Así podrás saber si se logró." });
+    } else if (VERBOS_VAGOS.test(obj)) {
+      items.push({ tipo: "mejora", texto: "<strong>Objetivo:</strong> usa verbos difíciles de observar, como «comprender» o «conocer». Prueba con una acción visible: resolver, explicar, crear, comparar, argumentar…" });
+    } else {
+      items.push({ tipo: "mejora", texto: "<strong>Objetivo:</strong> no encontramos una acción observable. Escríbelo como «los estudiantes podrán + verbo» (resolver, explicar, crear…)." });
+    }
+
+    /* B. Actividad y herramienta */
+    if (!act) {
+      items.push({ tipo: "falta", texto: "<strong>Actividad:</strong> aún está vacía. Describe qué harán los estudiantes, paso a paso." });
+    } else if (act.length < 80) {
+      items.push({ tipo: "mejora", texto: "<strong>Actividad:</strong> es muy breve. Agrega los pasos que seguirán los estudiantes y qué producirán al final." });
+    } else {
+      items.push({ tipo: "ok", texto: "<strong>Actividad:</strong> tiene suficiente detalle para que otra persona entienda qué harán los estudiantes." });
+    }
+
+    if (!herr) {
+      items.push({ tipo: "falta", texto: "<strong>Herramienta:</strong> aún no la has elegido." });
+    } else if (act) {
+      var palabrasHerr = herr.split(/[^a-z0-9ñ]+/).filter(function (p) { return p.length > 3 && ["hoja", "hojas", "google", "calculo", "linea", "editor", "herramienta"].indexOf(p) === -1; });
+      var mencionada = palabrasHerr.length === 0 || palabrasHerr.some(function (p) { return act.indexOf(p) !== -1; }) || /herramienta|aplicacion|plataforma/.test(act);
+      if (mencionada) {
+        items.push({ tipo: "ok", texto: "<strong>Herramienta:</strong> aparece dentro de la actividad, con un papel concreto." });
+      } else {
+        items.push({ tipo: "mejora", texto: "<strong>Herramienta:</strong> elegiste «" + escaparHtml(d["p-herramienta"]) + "», pero la actividad no dice para qué la usarán los estudiantes. Nómbrala en el paso donde la necesitan." });
+      }
+    }
+
+    /* Justificación con criterios */
+    var encontrados = CRITERIOS.filter(function (c) { return c.patron.test(just); }).map(function (c) { return c.nombre; });
+    if (!just) {
+      items.push({ tipo: "falta", texto: "<strong>Justificación:</strong> aún está vacía. Explica por qué elegiste la herramienta usando al menos dos de los cuatro criterios." });
+    } else if (encontrados.length >= 2) {
+      items.push({ tipo: "ok", texto: "<strong>Justificación:</strong> se apoya en " + encontrados.length + " criterios (" + encontrados.join(", ") + ")." });
+    } else {
+      var faltan = CRITERIOS.map(function (c) { return c.nombre; }).filter(function (n) { return encontrados.indexOf(n) === -1; });
+      items.push({ tipo: "mejora", texto: "<strong>Justificación:</strong> " + (encontrados.length ? "solo identificamos el criterio de " + encontrados[0] + "." : "no identificamos ninguno de los cuatro criterios.") + " Agrega al menos otro: " + faltan.join(", ") + "." });
+    }
+
+    /* C. Evaluación */
+    if (!eva) {
+      items.push({ tipo: "falta", texto: "<strong>Evaluación:</strong> aún está vacía. ¿Qué evidencia recogerás y cómo la valorarás?" });
+    } else {
+      var tieneCriterios = /criteri|rubrica|valorar|valorare|lista de cotejo|indicador|nivel|que (la|el|las|los) .* (sea|este|represente|se apoye)/.test(eva);
+      if (tieneCriterios) {
+        items.push({ tipo: "ok", texto: "<strong>Evaluación:</strong> dice con qué criterios valorarás la evidencia." });
+      } else {
+        items.push({ tipo: "mejora", texto: "<strong>Evaluación:</strong> nombra la evidencia, pero no con qué criterios la valorarás. Agrega dos o tres aspectos concretos (o una rúbrica sencilla)." });
+      }
+      /* Alineación objetivo–evaluación: ¿la evaluación mira la acción del objetivo? */
+      if (verbosObj.length) {
+        var raices = verbosObj.map(function (v) { return v.replace(VERBOS_OBSERVABLES, "$1"); });
+        var alineada = raices.some(function (r) { return new RegExp("\\b" + r).test(eva); });
+        if (alineada) {
+          items.push({ tipo: "ok", texto: "<strong>Alineación:</strong> la evaluación mira la misma acción que promete el objetivo. Las piezas cuentan la misma historia." });
+        } else {
+          items.push({ tipo: "mejora", texto: "<strong>Alineación:</strong> tu objetivo habla de «" + escaparHtml(verbosObj[0]) + "», pero la evaluación no lo menciona. Verifica que valores precisamente eso." });
+        }
+      }
+    }
+    return items;
+  }
+
+  var ICONOS = { ok: "✔", mejora: "✎", falta: "○" };
+  var ETIQUETAS = { ok: "Se ve bien", mejora: "Puedes mejorarlo", falta: "Falta" };
+
+  function mostrarRetroBorrador() {
+    var items = revisarBorrador(datosPlantilla());
+    var bien = items.filter(function (i) { return i.tipo === "ok"; }).length;
+    var cont = document.getElementById("retro-borrador");
+    var resumen = bien === items.length
+      ? "<p class='retro-resumen'><strong>Tu borrador se ve sólido en los " + items.length + " aspectos revisados.</strong> Confírmalo con la lista de criterios.</p>"
+      : "<p class='retro-resumen'><strong>" + bien + " de " + items.length + " aspectos se ven bien.</strong> Revisa los demás y ajústalos con el botón Anterior.</p>";
+    cont.innerHTML = resumen + "<ul class='retro-lista'>" + items.map(function (i) {
+      return "<li class='retro-item " + i.tipo + "'><span class='retro-icono' aria-hidden='true'>" + ICONOS[i.tipo] + "</span>" +
+        "<span><span class='retro-etiqueta'>" + ETIQUETAS[i.tipo] + ".</span> " + i.texto + "</span></li>";
+    }).join("") + "</ul>";
   }
 
   /* ---------- Lista de cotejo ---------- */
@@ -412,7 +666,7 @@
   }
   actualizarCotejo();
 
-  /* ---------- Descarga ---------- */
+  /* ---------- Descarga en texto ---------- */
   function textoActividad() {
     var d = datosPlantilla();
     var linea = "----------------------------------------";
@@ -421,9 +675,9 @@
       "OVA de formación docente · Colegio Colsubsidio Maiporé",
       "Grupo 9 · Maestría MITE · Universidad El Bosque",
       linea,
-      "Docente:   " + (d["p-nombre"] || "(sin diligenciar)"),
-      "Asignatura:" + " " + (d["p-asignatura"] || "(sin diligenciar)"),
-      "Grado:     " + (d["p-grado"] || "(sin diligenciar)"),
+      "Docente:    " + (d["p-nombre"] || "(sin diligenciar)"),
+      "Asignatura: " + (d["p-asignatura"] || "(sin diligenciar)"),
+      "Grado:      " + (d["p-grado"] || "(sin diligenciar)"),
       linea,
       "A. OBJETIVO DE APRENDIZAJE",
       d["p-objetivo"] || "(sin diligenciar)",
@@ -444,15 +698,21 @@
       "Compártelo con el docente insignia para recibir",
       "retroalimentación en los espacios de formación.",
       "Licencia del OVA: CC BY-NC-SA 4.0"
-    ].join("\n");
+    ].join("\r\n");
+  }
+
+  function nombreArchivo() {
+    var n = normalizar(datosPlantilla()["p-nombre"]).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    return "mi-actividad-tac" + (n ? "-" + n : "") + ".txt";
   }
 
   document.getElementById("btn-descargar").addEventListener("click", function () {
-    var blob = new Blob([textoActividad()], { type: "text/plain;charset=utf-8" });
+    /* El BOM ayuda a que el Bloc de notas de Windows muestre bien las tildes */
+    var blob = new Blob(["﻿" + textoActividad()], { type: "text/plain;charset=utf-8" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    a.download = "mi-actividad-tac.txt";
+    a.download = nombreArchivo();
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -460,31 +720,72 @@
   });
 
   /* ---------- Impresión / PDF ---------- */
-  document.getElementById("btn-imprimir").addEventListener("click", function () {
-    var d = datosPlantilla();
+  var SECCIONES_IMPRESION = [
+    { id: "p-objetivo", titulo: "A. Objetivo de aprendizaje", ayuda: "¿Qué aprenderán? Escríbelo observable: «los estudiantes podrán…»" },
+    { id: "p-actividad", titulo: "B. Actividad", ayuda: "¿Qué harán los estudiantes? Describe la tarea paso a paso y qué producirán." },
+    { id: "p-herramienta", titulo: "Herramienta digital elegida", ayuda: "Gratuita o de libre acceso, que funcione con los equipos y la conectividad del colegio." },
+    { id: "p-justificacion", titulo: "Justificación (criterios)", ayuda: "¿Por qué esa herramienta? Usa al menos dos criterios: propósito, pertinencia, viabilidad, valor agregado." },
+    { id: "p-evaluacion", titulo: "C. Evaluación", ayuda: "¿Cómo sabrás que aprendieron? Qué evidencia recogerás y con qué criterios la valorarás." }
+  ];
+
+  function prepararImpresion(enBlanco) {
+    var d = enBlanco ? {} : datosPlantilla();
     var area = document.getElementById("area-impresion");
-    function esc(t) { var s = document.createElement("span"); s.textContent = t; return s.innerHTML; }
-    area.innerHTML =
-      "<h1>Mi actividad de enseñanza con TAC</h1>" +
-      "<p class='doc-meta'>Del TIC al TAC · OVA de formación docente · Colegio Colsubsidio Maiporé · Grupo 9 MITE</p>" +
-      "<p><strong>Docente:</strong> " + esc(d["p-nombre"] || "—") + " &nbsp;·&nbsp; <strong>Asignatura:</strong> " + esc(d["p-asignatura"] || "—") + " &nbsp;·&nbsp; <strong>Grado:</strong> " + esc(d["p-grado"] || "—") + "</p>" +
-      "<h2>A. Objetivo de aprendizaje</h2><p>" + esc(d["p-objetivo"] || "—") + "</p>" +
-      "<h2>B. Actividad</h2><p>" + esc(d["p-actividad"] || "—") + "</p>" +
-      "<h2>Herramienta digital elegida</h2><p>" + esc(d["p-herramienta"] || "—") + "</p>" +
-      "<h2>Justificación (criterios)</h2><p>" + esc(d["p-justificacion"] || "—") + "</p>" +
-      "<h2>C. Evaluación</h2><p>" + esc(d["p-evaluacion"] || "—") + "</p>" +
-      "<p class='doc-meta'>Evidencia del recorrido por el OVA · Licencia CC BY-NC-SA 4.0</p>";
+    function valor(id) {
+      if (enBlanco) return "<div class='linea-blanco'></div>";
+      return "<p>" + escaparHtml(d[id] || "—") + "</p>";
+    }
+    var html =
+      "<h1>" + (enBlanco ? "Plantilla: mi actividad de enseñanza con TAC" : "Mi actividad de enseñanza con TAC") + "</h1>" +
+      "<p class='doc-meta'>Del TIC al TAC · OVA de formación docente · Colegio Colsubsidio Maiporé · Grupo 9 MITE</p>";
+    if (enBlanco) {
+      html += "<p><strong>Docente:</strong> ______________________ &nbsp; <strong>Asignatura:</strong> ________________ &nbsp; <strong>Grado:</strong> __________</p>";
+    } else {
+      html += "<p><strong>Docente:</strong> " + escaparHtml(d["p-nombre"] || "—") + " &nbsp;·&nbsp; <strong>Asignatura:</strong> " + escaparHtml(d["p-asignatura"] || "—") + " &nbsp;·&nbsp; <strong>Grado:</strong> " + escaparHtml(d["p-grado"] || "—") + "</p>";
+    }
+    SECCIONES_IMPRESION.forEach(function (s) {
+      html += "<h2>" + s.titulo + "</h2>";
+      if (enBlanco) html += "<p class='doc-ayuda'>" + s.ayuda + "</p>";
+      html += valor(s.id);
+    });
+    html += enBlanco
+      ? "<p class='doc-meta'>Cuando tengas conexión, puedes pasar tu diseño al OVA para recibir retroalimentación automática. Licencia CC BY-NC-SA 4.0</p>"
+      : "<p class='doc-meta'>Evidencia del recorrido por el OVA · Licencia CC BY-NC-SA 4.0</p>";
+    area.innerHTML = html;
+  }
+
+  var impresionPreparada = false;
+  function imprimir(enBlanco) {
+    prepararImpresion(enBlanco);
+    impresionPreparada = true;
     window.print();
+  }
+  document.getElementById("btn-imprimir").addEventListener("click", function () { imprimir(false); });
+  document.getElementById("btn-plantilla-blanco").addEventListener("click", function () { imprimir(true); });
+  /* Si se imprime con Ctrl+P / Cmd+P, sale la actividad actual en vez de una página en blanco */
+  window.addEventListener("beforeprint", function () {
+    if (!impresionPreparada) prepararImpresion(false);
   });
+  window.addEventListener("afterprint", function () { impresionPreparada = false; });
 
   /* ---------- Inicio ---------- */
   var hashInicial = (location.hash || "").replace("#", "");
-  var pasoInicial = estado.paso;
-  if (hashInicial && indicePaso(hashInicial) <= estado.maximo) pasoInicial = hashInicial;
-  irA(pasoInicial, false);
+  var pasoInicial = indicePaso(estado.paso) >= 0 ? estado.paso : "bienvenida";
+  var idxHash = indicePaso(hashInicial);
+  if (idxHash >= 0 && idxHash <= estado.maximo) pasoInicial = hashInicial;
+  irA(pasoInicial, "replace");
 
-  window.addEventListener("hashchange", function () {
-    var h = (location.hash || "").replace("#", "");
-    if (h && h !== estado.paso && indicePaso(h) <= estado.maximo) irA(h, false);
+  /* Botón «atrás» / «adelante» del navegador */
+  window.addEventListener("popstate", function (ev) {
+    var id = (ev.state && ev.state.paso) || (location.hash || "").replace("#", "");
+    var idx = indicePaso(id);
+    if (idx >= 0 && idx <= estado.maximo && id !== estado.paso) irA(id, "none");
   });
+
+  /* ---------- Modo sin conexión ---------- */
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
 })();
