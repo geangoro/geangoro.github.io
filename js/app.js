@@ -39,16 +39,25 @@
 
   /* ---------- Recorrido ---------- */
   var PASOS = [
-    { id: "bienvenida",     nombre: "Bienvenida" },
-    { id: "m1-continuum",   nombre: "Momento 1 · El continuo TIC–TAC" },
-    { id: "m1-diagnostico", nombre: "Momento 1 · ¿Cómo usas hoy la tecnología?" },
-    { id: "m2-criterios",   nombre: "Momento 2 · Cuatro criterios para elegir" },
-    { id: "m2-componentes", nombre: "Momento 2 · Las tres piezas de una actividad" },
-    { id: "m2-casos",       nombre: "Momento 2 · Analiza tres casos" },
-    { id: "m3-plantilla",   nombre: "Momento 3 · Diseña tu actividad" },
-    { id: "m3-revision",    nombre: "Momento 3 · Revisa, descarga y reflexiona" },
-    { id: "creditos",       nombre: "Créditos y licencia" }
+    { id: "bienvenida",     nombre: "Bienvenida", momento: 0 },
+    { id: "m1-continuum",   nombre: "El continuo TIC–TAC", momento: 1 },
+    { id: "m1-diagnostico", nombre: "¿Cómo usas hoy la tecnología?", momento: 1 },
+    { id: "m2-criterios",   nombre: "Cuatro criterios para elegir", momento: 2 },
+    { id: "m2-componentes", nombre: "Las tres piezas de una actividad", momento: 2 },
+    { id: "m2-casos",       nombre: "Analiza tres casos", momento: 2 },
+    { id: "m3-plantilla",   nombre: "Diseña tu actividad", momento: 3 },
+    { id: "m3-revision",    nombre: "Revisa, descarga y reflexiona", momento: 3 },
+    { id: "creditos",       nombre: "Créditos y licencia", momento: 0 }
   ];
+  var MOMENTOS = ["", "Momento 1: Reconocer", "Momento 2: Aprender y practicar", "Momento 3: Crear"];
+
+  /* Pista de progreso: un tramo por paso, con el color de su momento */
+  var pista = document.getElementById("pista");
+  PASOS.forEach(function (p) {
+    var li = document.createElement("li");
+    li.className = "tramo tramo-m" + p.momento;
+    pista.appendChild(li);
+  });
 
   /* Devuelve -1 si el id no es un paso (por ejemplo, #contenido) */
   function indicePaso(id) {
@@ -73,19 +82,19 @@
 
     /* Progreso */
     var pct = Math.round(((idx + 1) / PASOS.length) * 100);
-    var relleno = document.getElementById("progreso-relleno");
-    relleno.style.width = pct + "%";
     var cont = document.getElementById("progreso-barra-cont");
     cont.setAttribute("aria-valuenow", pct);
     cont.setAttribute("aria-valuetext", "Paso " + (idx + 1) + " de " + PASOS.length);
-    document.getElementById("progreso-texto").textContent =
-      "Paso " + (idx + 1) + " de " + PASOS.length + " · " + PASOS[idx].nombre;
-
-    /* Color de acento por momento */
-    var color = "#3a5a8f";
-    if (id.indexOf("m1") === 0) color = "#9c4a1c";
-    if (id.indexOf("m3") === 0) color = "#2c5c41";
-    relleno.style.background = color;
+    pista.querySelectorAll(".tramo").forEach(function (t, i) {
+      t.classList.toggle("hecho", i < idx);
+      t.classList.toggle("actual", i === idx);
+    });
+    var momento = MOMENTOS[PASOS[idx].momento];
+    document.getElementById("progreso-texto").innerHTML =
+      "<span class='progreso-paso'>Paso " + (idx + 1) + " de " + PASOS.length + "</span> " +
+      (momento ? "<span class='progreso-momento m" + PASOS[idx].momento + "'>" + momento + "</span> " : "") +
+      "<span>" + PASOS[idx].nombre + "</span>";
+    document.body.setAttribute("data-momento", PASOS[idx].momento);
 
     construirMenu();
     if (id === "m3-revision") mostrarRetroBorrador();
@@ -145,6 +154,13 @@
     var actual = indicePaso(estado.paso);
     PASOS.forEach(function (p, i) {
       var li = document.createElement("li");
+      li.className = "menu-m" + p.momento;
+      if (p.momento && (i === 0 || PASOS[i - 1].momento !== p.momento)) {
+        var grupo = document.createElement("span");
+        grupo.className = "menu-grupo";
+        grupo.textContent = MOMENTOS[p.momento];
+        li.appendChild(grupo);
+      }
       var b = document.createElement("button");
       b.type = "button";
       b.textContent = p.nombre;
