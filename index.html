@@ -7,7 +7,8 @@
 <title>Del TIC al TAC · Diseña tu actividad de clase con propósito pedagógico</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Lexend:wght@400;600;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#1c2541">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -26,7 +27,7 @@
     </nav>
   </div>
   <div class="progreso" role="progressbar" aria-label="Progreso del recorrido" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progreso-barra-cont">
-    <div class="progreso-relleno" id="progreso-relleno"></div>
+    <ol class="pista" id="pista" aria-hidden="true"></ol>
   </div>
   <p class="progreso-texto" id="progreso-texto" aria-live="polite">Bienvenida</p>
 </header>
@@ -44,7 +45,7 @@
   <ul class="panel-ayuda-lista">
     <li>Avanza con el botón <strong>Siguiente</strong> y regresa con <strong>Anterior</strong>.</li>
     <li>En los ejercicios puedes <strong>reintentar</strong> todas las veces que necesites; equivocarse hace parte del aprendizaje.</li>
-    <li>Las palabras con <span class="glosario-muestra">subrayado punteado</span> tienen una definición: púlsalas para verla.</li>
+    <li>Las palabras <span class="glosario-muestra">resaltadas</span> tienen una definición: púlsalas para verla.</li>
     <li>Tu avance y tus respuestas se guardan solo en este dispositivo; puedes cerrar y continuar después.</li>
     <li>Después de abrirlo una vez con internet, el recurso funciona <strong>sin conexión</strong> en este mismo navegador.</li>
     <li>Puedes usar el botón «atrás» del navegador o del celular para volver al paso anterior. La tecla <kbd>Esc</kbd> cierra los paneles.</li>
@@ -60,9 +61,32 @@
 
 <!-- ============ PASO 0 · BIENVENIDA ============ -->
 <section class="paso" id="paso-bienvenida" data-paso="bienvenida">
-  <p class="etiqueta">Bienvenida</p>
-  <h1>Del TIC al <abbr title="Tecnologías para el Aprendizaje y el Conocimiento">TAC</abbr></h1>
-  <p class="subtitulo">Diseña tu actividad de clase con propósito pedagógico</p>
+  <header class="portada portada-inicio">
+    <p class="etiqueta">Formación docente del Colegio Colsubsidio Maiporé</p>
+    <h1>Del TIC al <abbr title="Tecnologías para el Aprendizaje y el Conocimiento">TAC</abbr></h1>
+    <p class="subtitulo">Diseña tu actividad de clase con propósito pedagógico</p>
+
+    <figure class="continuo">
+      <ol class="continuo-pista">
+        <li class="estacion estacion-tic">
+          <span class="estacion-punto" aria-hidden="true"></span>
+          <span class="estacion-nombre">TIC</span>
+          <span class="estacion-texto">La tecnología apoya la clase</span>
+        </li>
+        <li class="estacion estacion-tac">
+          <span class="estacion-punto" aria-hidden="true"></span>
+          <span class="estacion-nombre">TAC</span>
+          <span class="estacion-texto">Los estudiantes aprenden con ella</span>
+        </li>
+        <li class="estacion estacion-tep">
+          <span class="estacion-punto" aria-hidden="true"></span>
+          <span class="estacion-nombre">TEP</span>
+          <span class="estacion-texto">La institución se transforma</span>
+        </li>
+      </ol>
+      <figcaption class="continuo-nota">Este recurso te acompaña en el primer salto: de usar la tecnología a aprender con ella.</figcaption>
+    </figure>
+  </header>
 
   <!-- Video de bienvenida. Para agregarlo, pega en data-video la URL de
        inserción (por ejemplo https://www.youtube-nocookie.com/embed/ID).
@@ -85,9 +109,9 @@
 
   <h2>¿Cómo es el recorrido?</h2>
   <ol class="recorrido-resumen">
-    <li><strong>Momento 1 · Reconocer.</strong> Mirarás cómo usas hoy la tecnología en tu clase.</li>
-    <li><strong>Momento 2 · Aprender y practicar.</strong> Conocerás criterios para elegir herramientas y analizarás casos de clase reales.</li>
-    <li><strong>Momento 3 · Crear.</strong> Diseñarás tu propia actividad con una plantilla guiada y reflexionarás sobre lo aprendido.</li>
+    <li class="momento-1"><strong>Reconocer</strong> Mirarás cómo usas hoy la tecnología en tu clase.</li>
+    <li class="momento-2"><strong>Aprender y practicar</strong> Conocerás criterios para elegir herramientas y analizarás casos de clase reales.</li>
+    <li class="momento-3"><strong>Crear</strong> Diseñarás tu propia actividad con una plantilla guiada y reflexionarás sobre lo aprendido.</li>
   </ol>
   <p>No todos partimos del mismo lugar. Al final del Momento 1, según tu autodiagnóstico, te sugeriremos una ruta: hacer el recorrido completo o ir directo a lo que más necesitas.</p>
   <p class="nota">Tiempo estimado: 60 a 90 minutos. No necesitas terminar de una vez: tu avance se guarda. Después de abrirlo una vez con internet, también funciona sin conexión en este dispositivo.</p>
@@ -100,8 +124,10 @@
 
 <!-- ============ PASO 1 · MOMENTO 1: CONTINUO TIC-TAC ============ -->
 <section class="paso momento-1" id="paso-m1-continuum" data-paso="m1-continuum" hidden>
-  <p class="etiqueta">Momento 1 · Reconocer</p>
-  <h2>No es lo mismo usar tecnología que aprender con tecnología</h2>
+  <header class="portada" data-num="1">
+    <p class="etiqueta"><span class="etiqueta-num">Momento 1</span> Reconocer</p>
+    <h2>No es lo mismo usar tecnología que aprender con tecnología</h2>
+  </header>
 
   <p>Piensa en tu última clase con tecnología. Quizás proyectaste un video, mostraste una presentación o pediste que buscaran información en internet. Eso es usar la tecnología como <strong>apoyo</strong>: la clase sigue siendo la misma, solo que con un recurso digital. A eso lo llamamos uso <button class="termino" data-termino="tic">TIC</button>.</p>
 
@@ -111,22 +137,22 @@
     <svg viewBox="0 0 720 210" role="img" aria-labelledby="t-infografia d-infografia">
       <title id="t-infografia">Continuo TIC–TAC–TEP</title>
       <desc id="d-infografia">Un continuo con tres niveles: TIC, la tecnología como apoyo de la clase tradicional; TAC, la tecnología como medio de aprendizaje del estudiante; y TEP, la tecnología transformando la cultura y las prácticas de toda la institución.</desc>
-      <line x1="40" y1="150" x2="680" y2="150" stroke="#1a1a18" stroke-width="2"/>
-      <path d="M672 142 L688 150 L672 158 Z" fill="#1a1a18"/>
+      <line x1="40" y1="150" x2="680" y2="150" stroke="#1c2541" stroke-width="3" stroke-linecap="round"/>
+      <path d="M672 141 L690 150 L672 159 Z" fill="#1c2541"/>
       <g>
-        <circle cx="130" cy="150" r="10" fill="#C66026"/>
+        <circle cx="130" cy="150" r="13" fill="#946200" stroke="#fff" stroke-width="4"/>
         <text x="130" y="118" text-anchor="middle" class="svg-titulo">TIC</text>
         <text x="130" y="182" text-anchor="middle" class="svg-texto">Apoyo de la clase</text>
         <text x="130" y="198" text-anchor="middle" class="svg-texto">(proyectar, mostrar)</text>
       </g>
       <g>
-        <circle cx="370" cy="150" r="10" fill="#48699B"/>
+        <circle cx="370" cy="150" r="13" fill="#2a4fb8" stroke="#fff" stroke-width="4"/>
         <text x="370" y="118" text-anchor="middle" class="svg-titulo">TAC</text>
         <text x="370" y="182" text-anchor="middle" class="svg-texto">Medio de aprendizaje</text>
         <text x="370" y="198" text-anchor="middle" class="svg-texto">(crear, simular, colaborar)</text>
       </g>
       <g>
-        <circle cx="610" cy="150" r="10" fill="#2F6B4F"/>
+        <circle cx="610" cy="150" r="13" fill="#1d6b4f" stroke="#fff" stroke-width="4"/>
         <text x="610" y="118" text-anchor="middle" class="svg-titulo">TEP</text>
         <text x="610" y="182" text-anchor="middle" class="svg-texto">Transformación institucional</text>
         <text x="610" y="198" text-anchor="middle" class="svg-texto">(cultura y prácticas)</text>
@@ -158,8 +184,10 @@
 
 <!-- ============ PASO 2 · MOMENTO 1: AUTODIAGNÓSTICO ============ -->
 <section class="paso momento-1" id="paso-m1-diagnostico" data-paso="m1-diagnostico" hidden>
-  <p class="etiqueta">Momento 1 · Reconocer</p>
-  <h2>¿Cómo usas hoy la tecnología en tu clase?</h2>
+  <header class="portada" data-num="1">
+    <p class="etiqueta"><span class="etiqueta-num">Momento 1</span> Reconocer</p>
+    <h2>¿Cómo usas hoy la tecnología en tu clase?</h2>
+  </header>
   <p>Responde con honestidad estas cinco afirmaciones. No hay respuestas buenas ni malas: esto es una fotografía de tu punto de partida, y solo la ves tú.</p>
 
   <form id="form-diagnostico" class="diagnostico">
@@ -196,10 +224,13 @@
 
 <!-- ============ PASO 3 · MOMENTO 2: CRITERIOS ============ -->
 <section class="paso momento-2" id="paso-m2-criterios" data-paso="m2-criterios" hidden>
-  <p class="etiqueta">Momento 2 · Aprender y practicar</p>
-  <h2>Cuatro criterios para elegir una herramienta digital</h2>
+  <header class="portada" data-num="2">
+    <p class="etiqueta"><span class="etiqueta-num">Momento 2</span> Aprender y practicar</p>
+    <h2>Cuatro criterios para elegir una herramienta digital</h2>
+  </header>
   <p>Antes de abrir cualquier aplicación, hazte estas cuatro preguntas. Si la herramienta no pasa el primer criterio, los demás no importan.</p>
 
+  <div class="fichas">
   <div class="criterio" id="criterio-1">
     <p class="criterio-num" aria-hidden="true">1</p>
     <div>
@@ -228,6 +259,7 @@
       <p>Si la actividad sería exactamente igual sin tecnología, estás en un uso de apoyo (TIC). Eso no está mal, pero reconócelo: el salto a TAC ocurre cuando la herramienta permite crear, simular, colaborar o representar de maneras nuevas.</p>
     </div>
   </div>
+  </div>
 
   <nav class="navegacion" aria-label="Navegación del paso">
     <button class="btn" data-goto="m1-diagnostico"><span aria-hidden="true">←</span> Anterior</button>
@@ -237,8 +269,10 @@
 
 <!-- ============ PASO 4 · MOMENTO 2: COMPONENTES ============ -->
 <section class="paso momento-2" id="paso-m2-componentes" data-paso="m2-componentes" hidden>
-  <p class="etiqueta">Momento 2 · Aprender y practicar</p>
-  <h2>Una actividad de enseñanza tiene tres piezas</h2>
+  <header class="portada" data-num="2">
+    <p class="etiqueta"><span class="etiqueta-num">Momento 2</span> Aprender y practicar</p>
+    <h2>Una actividad de enseñanza tiene tres piezas</h2>
+  </header>
   <p>Toda actividad con TAC bien diseñada responde, en orden, tres preguntas. Cuando diseñes la tuya en el Momento 3, la plantilla te guiará por estas mismas piezas.</p>
 
   <div class="piezas">
@@ -269,8 +303,10 @@
 
 <!-- ============ PASO 5 · MOMENTO 2: CASOS ============ -->
 <section class="paso momento-2" id="paso-m2-casos" data-paso="m2-casos" hidden>
-  <p class="etiqueta">Momento 2 · Aprender y practicar</p>
-  <h2>Analiza tres casos de clase</h2>
+  <header class="portada" data-num="2">
+    <p class="etiqueta"><span class="etiqueta-num">Momento 2</span> Aprender y practicar</p>
+    <h2>Analiza tres casos de clase</h2>
+  </header>
   <p>Ahora pondrás en juego los cuatro criterios y las tres piezas. Lee cada caso, toma una decisión y revisa la retroalimentación. Puedes reintentar las veces que quieras: equivocarse aquí es gratis.</p>
   <p class="nota">Los casos son de asignaturas distintas a propósito: los criterios aplican igual en todas.</p>
 
@@ -291,8 +327,10 @@
 
 <!-- ============ PASO 6 · MOMENTO 3: PLANTILLA ============ -->
 <section class="paso momento-3" id="paso-m3-plantilla" data-paso="m3-plantilla" hidden>
-  <p class="etiqueta">Momento 3 · Crear</p>
-  <h2>Diseña tu actividad de enseñanza con TAC</h2>
+  <header class="portada" data-num="3">
+    <p class="etiqueta"><span class="etiqueta-num">Momento 3</span> Crear</p>
+    <h2>Diseña tu actividad de enseñanza con TAC</h2>
+  </header>
   <p>Completa la plantilla pensando en una clase real de tu asignatura, de sexto o séptimo. Escribe sin miedo: es un borrador de trabajo que luego contrastarás con tus pares y con el docente insignia en los espacios de formación.</p>
   <p class="nota">¿Prefieres trabajar en papel o sin conexión? <button type="button" class="enlace-boton" id="btn-plantilla-blanco">Imprime la plantilla en blanco o guárdala como PDF</button>.</p>
 
@@ -358,8 +396,10 @@
 
 <!-- ============ PASO 7 · MOMENTO 3: REVISIÓN Y CIERRE ============ -->
 <section class="paso momento-3" id="paso-m3-revision" data-paso="m3-revision" hidden>
-  <p class="etiqueta">Momento 3 · Crear</p>
-  <h2>Revisa tu diseño</h2>
+  <header class="portada" data-num="3">
+    <p class="etiqueta"><span class="etiqueta-num">Momento 3</span> Crear</p>
+    <h2>Revisa tu diseño</h2>
+  </header>
   <p>Primero, una revisión automática de tu borrador. Luego, tu propia verificación con la lista de criterios.</p>
 
   <h3>Retroalimentación automática de tu borrador</h3>
@@ -408,8 +448,10 @@
 
 <!-- ============ PASO 8 · CRÉDITOS ============ -->
 <section class="paso" id="paso-creditos" data-paso="creditos" hidden>
-  <p class="etiqueta">Créditos</p>
-  <h2>Sobre este recurso</h2>
+  <header class="portada portada-creditos">
+    <p class="etiqueta">Créditos y licencia</p>
+    <h2>Sobre este recurso</h2>
+  </header>
   <p><strong>Del TIC al TAC: diseña tu actividad de clase con propósito pedagógico</strong> es un Objeto Virtual de Aprendizaje creado por el Grupo 9 de la Maestría en Innovación Educativa Mediada por TIC (MITE), Universidad El Bosque, como parte de la estrategia de formación del proyecto de innovación para el Colegio Colsubsidio Maiporé (2027).</p>
 
   <h3>Autoría</h3>
@@ -445,7 +487,7 @@
   <ul class="fuentes">
     <li>Textos, casos de clase, infografía del continuo TIC–TAC–TEP e íconos: elaboración propia del Grupo 9 MITE. Los casos y los nombres de docentes que aparecen en ellos son ficticios.</li>
     <li>Tipografía <em>Atkinson Hyperlegible</em>, de Braille Institute of America, con licencia SIL Open Font License 1.1.</li>
-    <li>Tipografía <em>Fraunces</em>, de Undercase Type, con licencia SIL Open Font License 1.1.</li>
+    <li>Tipografía <em>Lexend</em>, de Bonnie Shaver-Troup, Thomas Jockin y colaboradores, con licencia SIL Open Font License 1.1.</li>
     <li>Las tipografías se cargan desde Google Fonts. Si no hay conexión, se usan las fuentes del sistema.</li>
   </ul>
 
