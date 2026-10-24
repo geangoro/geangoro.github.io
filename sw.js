@@ -4,7 +4,7 @@
    visita. Con conexión siempre se pide la versión más reciente;
    sin conexión se usa la copia guardada.
    ============================================================ */
-const CACHE_NAME = "ova-tic-tac-v2";
+const CACHE_NAME = "ova-tic-tac-v3";
 const PRECACHE_URLS = ["./", "index.html", "css/styles.css", "js/app.js"];
 const FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
 
