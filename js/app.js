@@ -1,5 +1,5 @@
 /* ============================================================
-   Del TIC al TAC — OVA · Grupo 9 MITE
+   Del TIC al TAC — OVA · Maestría MITE, Universidad El Bosque
    Lógica: navegación por pasos con historial del navegador,
    progreso persistente, glosario, autodiagnóstico con ruta
    sugerida, casos con retroalimentación e intentos múltiples,
@@ -775,7 +775,7 @@
     return [
       "DEL TIC AL TAC — MI ACTIVIDAD DE ENSEÑANZA CON TAC",
       "OVA de formación docente · Colegio Colsubsidio Maiporé",
-      "Grupo 9 · Maestría MITE · Universidad El Bosque",
+      "Maestría MITE · Universidad El Bosque",
       linea,
       "Docente:    " + (d["p-nombre"] || "(sin diligenciar)"),
       "Asignatura: " + (d["p-asignatura"] || "(sin diligenciar)"),
@@ -839,7 +839,7 @@
     }
     var html =
       "<h1>" + (enBlanco ? "Plantilla: mi actividad de enseñanza con TAC" : "Mi actividad de enseñanza con TAC") + "</h1>" +
-      "<p class='doc-meta'>Del TIC al TAC · OVA de formación docente · Colegio Colsubsidio Maiporé · Grupo 9 MITE</p>";
+      "<p class='doc-meta'>Del TIC al TAC · OVA de formación docente · Colegio Colsubsidio Maiporé · Maestría MITE, Universidad El Bosque</p>";
     if (enBlanco) {
       html += "<p><strong>Docente:</strong> ______________________ &nbsp; <strong>Asignatura:</strong> ________________ &nbsp; <strong>Grado:</strong> __________</p>";
     } else {
