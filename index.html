@@ -137,21 +137,21 @@
     <svg viewBox="0 0 720 210" role="img" aria-labelledby="t-infografia d-infografia">
       <title id="t-infografia">Continuo TIC–TAC–TEP</title>
       <desc id="d-infografia">Un continuo con tres niveles: TIC, la tecnología como apoyo de la clase tradicional; TAC, la tecnología como medio de aprendizaje del estudiante; y TEP, la tecnología transformando la cultura y las prácticas de toda la institución.</desc>
-      <line x1="40" y1="150" x2="680" y2="150" stroke="#1c2541" stroke-width="3" stroke-linecap="round"/>
-      <path d="M672 141 L690 150 L672 159 Z" fill="#1c2541"/>
-      <g>
+      <line class="svg-linea" x1="40" y1="150" x2="680" y2="150" stroke="#1c2541" stroke-width="3" stroke-linecap="round"/>
+      <path class="svg-flecha" d="M672 141 L690 150 L672 159 Z" fill="#1c2541"/>
+      <g class="svg-estacion" style="--i:0">
         <circle cx="130" cy="150" r="13" fill="#946200" stroke="#fff" stroke-width="4"/>
         <text x="130" y="118" text-anchor="middle" class="svg-titulo">TIC</text>
         <text x="130" y="182" text-anchor="middle" class="svg-texto">Apoyo de la clase</text>
         <text x="130" y="198" text-anchor="middle" class="svg-texto">(proyectar, mostrar)</text>
       </g>
-      <g>
+      <g class="svg-estacion" style="--i:1">
         <circle cx="370" cy="150" r="13" fill="#2a4fb8" stroke="#fff" stroke-width="4"/>
         <text x="370" y="118" text-anchor="middle" class="svg-titulo">TAC</text>
         <text x="370" y="182" text-anchor="middle" class="svg-texto">Medio de aprendizaje</text>
         <text x="370" y="198" text-anchor="middle" class="svg-texto">(crear, simular, colaborar)</text>
       </g>
-      <g>
+      <g class="svg-estacion" style="--i:2">
         <circle cx="610" cy="150" r="13" fill="#1d6b4f" stroke="#fff" stroke-width="4"/>
         <text x="610" y="118" text-anchor="middle" class="svg-titulo">TEP</text>
         <text x="610" y="182" text-anchor="middle" class="svg-texto">Transformación institucional</text>
@@ -211,6 +211,10 @@
       <legend>5. Conozco herramientas digitales gratuitas que podría usar en mi asignatura.</legend>
       <div class="opciones-escala" data-pregunta="d5"></div>
     </fieldset>
+    <div class="medidor" id="medidor-diagnostico">
+      <div class="medidor-barra" aria-hidden="true"><span></span></div>
+      <p class="medidor-texto" aria-live="polite"></p>
+    </div>
     <button type="submit" class="btn btn-principal">Ver mi resultado</button>
   </form>
 
@@ -335,6 +339,10 @@
   <p class="nota">¿Prefieres trabajar en papel o sin conexión? <button type="button" class="enlace-boton" id="btn-plantilla-blanco">Imprime la plantilla en blanco o guárdala como PDF</button>.</p>
 
   <form id="form-plantilla" class="plantilla">
+    <div class="medidor medidor-fijo" id="medidor-plantilla">
+      <div class="medidor-barra" aria-hidden="true"><span></span></div>
+      <p class="medidor-texto" aria-live="polite"></p>
+    </div>
     <div class="campo">
       <label for="p-nombre">Tu nombre</label>
       <input type="text" id="p-nombre" autocomplete="name">
