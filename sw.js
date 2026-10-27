@@ -3,15 +3,18 @@
    Guarda una copia del OVA en el navegador después de la primera
    visita. Con conexión siempre se pide la versión más reciente;
    sin conexión se usa la copia guardada.
+   Las peticiones ignoran la copia temporal del navegador (que
+   GitHub Pages deja vigente hasta 10 minutos), para que cada
+   actualización del sitio se vea apenas se publica.
    ============================================================ */
-const CACHE_NAME = "ova-tic-tac-v4";
+const CACHE_NAME = "ova-tic-tac-v5";
 const PRECACHE_URLS = ["./", "index.html", "css/styles.css", "js/app.js"];
 const FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(PRECACHE_URLS))
+      .then((cache) => cache.addAll(PRECACHE_URLS.map((url) => new Request(url, { cache: "reload" }))))
       .then(() => self.skipWaiting())
   );
 });
@@ -30,9 +33,10 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
 
   // Archivos propios: primero la red (para recibir actualizaciones), luego la copia guardada.
+  // "no-cache" le pregunta al servidor si hay versión nueva; si no la hay, la respuesta es mínima.
   if (url.origin === self.location.origin) {
     event.respondWith(
-      fetch(request)
+      fetch(request, { cache: "no-cache" })
         .then((response) => {
           if (response.ok) {
             const copy = response.clone();
