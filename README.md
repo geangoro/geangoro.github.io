@@ -2,7 +2,9 @@
 
 **Objeto Virtual de Aprendizaje (OVA)**: *Diseña tu actividad de clase con propósito pedagógico.*
 
-Recurso de formación para docentes de sexto y séptimo del Colegio Colsubsidio Maiporé, creado por el Grupo 9 de la Maestría en Innovación y Tecnologías para la Educación (MITE), Universidad El Bosque.
+Recurso de formación para docentes de sexto y séptimo del Colegio Colsubsidio Maiporé, creado por un grupo de trabajo de la Maestría en Innovación y Tecnologías para la Educación (MITE), Universidad El Bosque.
+
+**Autores:** Angie Johana Álvarez Marín, Tania Carolina Galindo Vargas, Daniel Ramiro Salazar Mendoza, Germán Andrés Gómez Rodríguez y Omaira María del Pilar Ramírez.
 
 Enlace del OVA: **https://geangoro.github.io/**
 
