@@ -32,6 +32,55 @@
     return s.innerHTML;
   }
 
+  var MOVIMIENTO_REDUCIDO = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Medidor de avance: barra + texto. El texto se anuncia a lectores de pantalla. */
+  function actualizarMedidor(id, valor, total, texto) {
+    var medidor = document.getElementById(id);
+    if (!medidor) return;
+    medidor.classList.toggle("completo", valor === total);
+    medidor.querySelector(".medidor-barra span").style.setProperty("--avance", Math.round((valor / total) * 100) + "%");
+    medidor.querySelector(".medidor-texto").textContent = texto;
+  }
+
+  /* Pequeña celebración con los colores del continuo, al completar algo */
+  function celebrar(elemento) {
+    if (MOVIMIENTO_REDUCIDO || !elemento) return;
+    var colores = ["#946200", "#2a4fb8", "#1d6b4f", "#ffe066"];
+    var capa = document.createElement("div");
+    capa.className = "celebracion";
+    capa.setAttribute("aria-hidden", "true");
+    for (var i = 0; i < 22; i++) {
+      var p = document.createElement("span");
+      var angulo = (Math.PI * 2 * i) / 22 + Math.random() * 0.4;
+      var distancia = 60 + Math.random() * 70;
+      p.style.setProperty("--x", Math.round(Math.cos(angulo) * distancia) + "px");
+      p.style.setProperty("--y", Math.round(Math.sin(angulo) * distancia - 30) + "px");
+      p.style.setProperty("--giro", Math.round(Math.random() * 360) + "deg");
+      p.style.background = colores[i % colores.length];
+      p.style.animationDelay = Math.round(Math.random() * 120) + "ms";
+      capa.appendChild(p);
+    }
+    elemento.style.position = "relative";
+    elemento.appendChild(capa);
+    setTimeout(function () { capa.remove(); }, 1400);
+  }
+
+  /* Altura real de la cabecera: la usan los paneles y el medidor fijo de la plantilla */
+  function medirCabecera() {
+    var cabecera = document.querySelector(".cabecera");
+    if (cabecera) document.documentElement.style.setProperty("--alto-cabecera", cabecera.offsetHeight + "px");
+  }
+  medirCabecera();
+  window.addEventListener("resize", medirCabecera);
+
+  /* Orden de aparición en cascada de las tarjetas de cada paso */
+  [".recorrido-resumen li", ".fichas .criterio", ".piezas .pieza", ".ejemplo-par .ejemplo",
+   ".diagnostico fieldset", ".lista-cotejo .cotejo-item", ".reflexion li", ".plantilla > .campo, .plantilla > .campo-duo"
+  ].forEach(function (selector) {
+    document.querySelectorAll(selector).forEach(function (el, i) { el.style.setProperty("--i", i); });
+  });
+
   /* Texto en minúsculas y sin tildes, para comparar palabras clave */
   function normalizar(t) {
     return (t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -73,6 +122,9 @@
     if (idx < 0) return;
     var seccion = document.querySelector('[data-paso="' + id + '"]');
     if (!seccion) return;
+    /* Dirección de la transición: la hoja entra por la derecha al avanzar
+       y por la izquierda al regresar */
+    document.body.setAttribute("data-dir", idx < indicePaso(estado.paso) ? "atras" : "adelante");
     document.querySelectorAll(".paso").forEach(function (s) { s.hidden = true; });
     seccion.hidden = false;
     var cambio = estado.paso !== id;
@@ -289,12 +341,20 @@
       input.addEventListener("change", function () {
         estado.diagnostico[nombre] = i + 1;
         persistir();
+        actualizarMedidorDiagnostico();
       });
       label.appendChild(input);
       label.appendChild(document.createTextNode(etiqueta));
       cont.appendChild(label);
     });
   });
+
+  /* Medidor: cuántas afirmaciones van respondidas */
+  function actualizarMedidorDiagnostico() {
+    var n = PREGUNTAS.filter(function (p) { return document.querySelector('input[name="' + p + '"]:checked'); }).length;
+    actualizarMedidor("medidor-diagnostico", n, PREGUNTAS.length,
+      n === PREGUNTAS.length ? "Respondiste las 5 afirmaciones" : n + " de " + PREGUNTAS.length + " afirmaciones respondidas");
+  }
 
   var RUTAS = {
     inicial: {
@@ -354,6 +414,7 @@
     mostrarDiagnostico(true);
   });
   if (PREGUNTAS.every(function (n) { return estado.diagnostico[n]; })) mostrarDiagnostico(false);
+  actualizarMedidorDiagnostico();
 
   /* ---------- Casos con retroalimentación ---------- */
   var CASOS = [
@@ -463,6 +524,7 @@
         var correcta = 0;
         caso.opciones.forEach(function (op, oi) { if (op.correcta) correcta = oi; });
         responderCaso(idx, correcta, div, false);
+        div.querySelectorAll(".caso-opcion").forEach(function (b) { b.classList.add("sin-animacion"); });
       }
     });
   }
@@ -500,7 +562,7 @@
       re.addEventListener("click", function () {
         botones.forEach(function (b) {
           b.disabled = false;
-          b.classList.remove("correcta", "incorrecta");
+          b.classList.remove("correcta", "incorrecta", "sin-animacion");
           b.removeAttribute("aria-label");
         });
         retro.hidden = true;
@@ -519,8 +581,12 @@
     var resueltos = CASOS.filter(function (c, i) { return estado.casos[i]; }).length;
     var cierre = document.getElementById("casos-cierre");
     if (resueltos === CASOS.length) {
+      var yaVisible = !cierre.hidden;
       cierre.hidden = false;
-      if (desplazar) cierre.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (desplazar) {
+        cierre.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        if (!yaVisible) celebrar(cierre.querySelector(".destacado"));
+      }
     }
   }
 
@@ -536,8 +602,24 @@
     el.addEventListener(evento, function () {
       estado.plantilla[id] = el.value;
       persistir();
+      actualizarMedidorPlantilla();
     });
   });
+
+  /* Medidor de la plantilla y marca ✓ en cada campo completo */
+  function actualizarMedidorPlantilla() {
+    var llenos = 0;
+    CAMPOS.forEach(function (id) {
+      var el = document.getElementById(id);
+      var lleno = !!(el && el.value.trim());
+      if (lleno) llenos++;
+      var campo = el && el.closest(".campo");
+      if (campo) campo.classList.toggle("lleno", lleno);
+    });
+    actualizarMedidor("medidor-plantilla", llenos, CAMPOS.length,
+      llenos === CAMPOS.length ? "Completaste todos los campos" : llenos + " de " + CAMPOS.length + " campos completos");
+  }
+  actualizarMedidorPlantilla();
 
   function datosPlantilla() {
     var d = {};
@@ -652,8 +734,11 @@
     var resumen = bien === items.length
       ? "<p class='retro-resumen'><strong>Tu borrador va bien en los " + items.length + " aspectos que revisamos.</strong> Confírmalo con la lista de abajo.</p>"
       : "<p class='retro-resumen'><strong>" + bien + " de " + items.length + " aspectos van bien.</strong> Revisa los demás y ajústalos con el botón Anterior.</p>";
-    cont.innerHTML = resumen + "<ul class='retro-lista'>" + items.map(function (i) {
-      return "<li class='retro-item " + i.tipo + "'><span class='retro-icono' aria-hidden='true'>" + ICONOS[i.tipo] + "</span>" +
+    var pct = Math.round((bien / items.length) * 100);
+    cont.innerHTML = resumen +
+      "<div class='medidor-barra medidor-retro' aria-hidden='true'><span style='--avance:" + pct + "%'></span></div>" +
+      "<ul class='retro-lista'>" + items.map(function (i, n) {
+      return "<li class='retro-item " + i.tipo + "' style='--i:" + n + "'><span class='retro-icono' aria-hidden='true'>" + ICONOS[i.tipo] + "</span>" +
         "<span><span class='retro-etiqueta'>" + ETIQUETAS[i.tipo] + ".</span> " + i.texto + "</span></li>";
     }).join("") + "</ul>";
   }
@@ -665,17 +750,18 @@
     cb.addEventListener("change", function () {
       estado.cotejo[k] = cb.checked;
       persistir();
-      actualizarCotejo();
+      actualizarCotejo(true);
     });
   });
 
-  function actualizarCotejo() {
+  function actualizarCotejo(interactivo) {
     var total = document.querySelectorAll("[data-cotejo]").length;
     var marcados = document.querySelectorAll("[data-cotejo]:checked").length;
     var salida = document.getElementById("resultado-cotejo");
     if (marcados === 0) { salida.innerHTML = ""; return; }
     if (marcados === total) {
       salida.innerHTML = "<strong>✔ Tu diseño cumple toda la lista.</strong>Tu actividad tiene un propósito claro, una herramienta bien justificada y una evaluación que coincide con el objetivo. Ya puedes descargarla y compartirla con el docente insignia.";
+      if (interactivo) celebrar(salida);
     } else {
       salida.innerHTML = "<strong>Llevas " + marcados + " de " + total + " criterios.</strong>Vuelve a la plantilla con el botón Anterior y ajusta lo que falta. Tus marcas quedan guardadas.";
     }
