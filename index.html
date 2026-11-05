@@ -88,11 +88,12 @@
     </figure>
   </header>
 
-  <!-- Video de bienvenida. Para agregarlo, pega en data-video la URL de
-       inserción (por ejemplo https://www.youtube-nocookie.com/embed/ID).
-       Mientras esté vacío, solo se muestra la versión en texto. -->
+  <!-- Videos: cada .video-marco recibe en data-video la URL de inserción
+       (https://www.youtube-nocookie.com/embed/ID) y en data-titulo el nombre
+       que lee el lector de pantalla. js/app.js crea el reproductor. -->
   <figure class="bienvenida-medio">
-    <div class="video-marco" id="video-bienvenida" data-video="" hidden></div>
+    <div class="video-marco" id="video-bienvenida" data-video="https://www.youtube-nocookie.com/embed/vzD7zmlDOHk" data-titulo="Video: Las TIC en la educación en 2026" hidden></div>
+    <p class="video-fuente">Video: «Las TICS de la educación en 2026», del canal Aprendizaje Virtual (YouTube).</p>
     <figcaption class="mensaje-texto">
       <p class="destacado-titulo" id="titulo-mensaje">Mensaje de bienvenida</p>
       <p>Hola, colega. Seguramente ya usas tecnología en tus clases: proyectas videos, muestras presentaciones o buscas información con tus estudiantes. Aquí no vas a tener que aprender un montón de aplicaciones nuevas. Lo que te proponemos es más sencillo y, a la vez, más útil: <strong>decidir con criterio</strong> cuándo y para qué usar una herramienta digital.</p>
@@ -163,14 +164,34 @@
     <figcaption>Un mismo recurso puede quedar en cualquiera de los tres niveles. Depende de cómo lo uses.</figcaption>
   </figure>
 
+  <figure class="video-bloque">
+    <div class="video-marco" data-video="https://www.youtube-nocookie.com/embed/3hlCoCEvuGw" data-titulo="Video: TIC, TAC y TEP, transforma tu aula paso a paso" hidden></div>
+    <figcaption>Este video explica los tres niveles y cómo avanzar de uno a otro en el aula. <span class="video-fuente">«TIC, TAC y TEP: transforma tu aula paso a paso», del canal Enseñar con IA (YouTube).</span></figcaption>
+  </figure>
+
+  <p>Veamos la diferencia con un mismo tema: la fotosíntesis. Este es el tipo de video que suele proyectarse en clase.</p>
+
+  <figure class="video-bloque">
+    <div class="video-marco" data-video="https://www.youtube-nocookie.com/embed/X2Z-0e5maKw" data-titulo="Video: Fotosíntesis" hidden></div>
+    <figcaption><span class="video-fuente">«Fotosíntesis», del canal Es Ciencia (YouTube).</span></figcaption>
+  </figure>
+
   <div class="ejemplo-par">
     <div class="ejemplo">
       <p class="ejemplo-titulo tic">Ejemplo de uso TIC</p>
       <p>«Proyecto un video sobre la fotosíntesis y luego los estudiantes responden el cuestionario del libro.»</p>
+      <figure class="video-bloque video-corto">
+        <div class="video-marco video-vertical" data-video="https://www.youtube-nocookie.com/embed/iYFc5zVcKJM" data-titulo="Video corto: proceso de la fotosíntesis explicado" hidden></div>
+        <figcaption><span class="video-fuente">«Proceso de la fotosíntesis explicado muy fácilmente», del canal Interés Agronómico (YouTube).</span></figcaption>
+      </figure>
     </div>
     <div class="ejemplo">
       <p class="ejemplo-titulo tac">Ejemplo de uso TAC</p>
       <p>«Los estudiantes registran con el celular el crecimiento de una planta durante dos semanas, organizan los datos en una hoja de cálculo y crean un video corto explicando sus conclusiones.»</p>
+      <figure class="video-bloque video-corto">
+        <div class="video-marco video-vertical" data-video="https://www.youtube-nocookie.com/embed/KVKc3zNvFAk" data-titulo="Video corto: experimento sobre la fotosíntesis con estudiantes" hidden></div>
+        <figcaption><span class="video-fuente">«Experimento sobre la fotosíntesis», del canal juan andres (YouTube).</span></figcaption>
+      </figure>
     </div>
   </div>
 
@@ -219,6 +240,12 @@
   </form>
 
   <div class="resultado" id="resultado-diagnostico" hidden aria-live="polite"></div>
+
+  <div class="destacado encuesta-externa" id="encuesta-externa" hidden>
+    <p class="destacado-titulo">Comparte tus respuestas con el equipo de formación</p>
+    <p>Si quieres, responde estas mismas cinco preguntas en la encuesta inicial. Así el equipo que acompaña la formación sabe desde dónde arranca cada docente y puede preparar mejor los encuentros. A diferencia del autodiagnóstico, estas respuestas sí le llegan al equipo, y la encuesta necesita internet.</p>
+    <a class="btn btn-pequeno" href="https://forms.gle/2PcdvQkqqiVVnxqg7" target="_blank" rel="noopener">Abrir la encuesta inicial <span class="sr-only">(se abre en otra pestaña)</span></a>
+  </div>
 
   <nav class="navegacion" aria-label="Navegación del paso">
     <button class="btn" data-goto="m1-continuum"><span aria-hidden="true">←</span> Anterior</button>
@@ -298,6 +325,27 @@
     <p class="destacado-titulo">Las tres piezas tienen que coincidir</p>
     <p>Si el objetivo es que tus estudiantes argumenten, la actividad tiene que ponerlos a argumentar y la evaluación tiene que fijarse en sus argumentos. Cuando una de las piezas apunta para otro lado, la actividad pierde fuerza.</p>
   </div>
+
+  <h3>Un ejemplo completo: la teoría de los gases</h3>
+  <p>Así se ven los cuatro criterios en una clase real de séptimo. Fíjate cómo cada parada descarta opciones hasta llegar a la herramienta.</p>
+
+  <figure class="infografia infografia-imagen">
+    <img src="images/tool-selection-route.jpg" width="836" height="626" loading="lazy" alt="Infografía «Recorrido para elegir una herramienta digital»: un camino con cinco paradas para una clase de séptimo sobre la teoría de los gases, que termina en el simulador Propiedades de los gases de PhET. La versión en texto está debajo.">
+    <figcaption>Recorrido para elegir una herramienta digital. Infografía hecha por el grupo de trabajo en Canva.</figcaption>
+  </figure>
+
+  <details class="version-texto">
+    <summary>Ver la infografía en texto</summary>
+    <ol>
+      <li><strong>Punto de partida.</strong> Mi clase: séptimo grado, teoría de los gases.</li>
+      <li><strong>Parada 1, propósito: ¿qué aprendizaje hace posible?</strong> Mis estudiantes podrán comprobar cómo se relacionan la presión, el volumen y la temperatura. Consejo: completa la frase «con esta herramienta mis estudiantes podrán…».</li>
+      <li><strong>Parada 2, pertinencia: ¿es la mejor opción para ese propósito?</strong> Un video solo muestra; un simulador deja cambiar una variable y ver el efecto. Consejo: lo más nuevo no siempre es lo mejor.</li>
+      <li><strong>Parada 3, viabilidad: ¿puedo usarla en mi contexto real?</strong> Es gratuita y se descarga para usarla sin internet en los equipos del colegio.</li>
+      <li><strong>Parada 4, valor agregado: ¿qué aporta que no lograría sin ella?</strong> Sin ella, los estudiantes solo escucharían la teoría. Con ella, la ponen a prueba con hipótesis. Si todo queda igual, es TIC. Si permite crear, simular, colaborar o mostrar, es TAC.</li>
+      <li><strong>Meta final.</strong> El simulador «Propiedades de los gases» de PhET: gratuito, descargable e interactivo.</li>
+    </ol>
+  </details>
+  <p><a class="btn btn-pequeno" href="https://canva.link/qjg5e2359rqqaus" target="_blank" rel="noopener">Ver la infografía en Canva <span class="sr-only">(se abre en otra pestaña)</span></a></p>
 
   <nav class="navegacion" aria-label="Navegación del paso">
     <button class="btn" data-goto="m2-criterios"><span aria-hidden="true">←</span> Anterior</button>
@@ -473,13 +521,13 @@
     <dt>Contenido, pedagogía y tecnología van juntos (TPACK)</dt>
     <dd>Aquí no se enseñan herramientas sueltas. El docente aprende a distinguir el uso instrumental del uso pedagógico, a elegir una herramienta según lo que quiere que aprendan sus estudiantes y a armar una actividad con objetivo, tarea y evaluación. Y lo aprende haciendo: analiza casos, practica y crea.</dd>
     <dt>Distintas maneras de entrar y avanzar (DUA)</dt>
-    <dd>No todos llegan con la misma experiencia, así que el autodiagnóstico sugiere una ruta y nadie tiene que repetir lo que ya domina. El glosario está siempre a mano, la bienvenida también está en texto para quien no pueda ver el video, y la página se puede usar con teclado o con lector de pantalla.</dd>
+    <dd>No todos llegan con la misma experiencia, así que el autodiagnóstico sugiere una ruta y nadie tiene que repetir lo que ya domina. El glosario está siempre a mano, los ejemplos se presentan en texto y en video, la infografía del recorrido tiene su versión en texto, y la página se puede usar con teclado o con lector de pantalla.</dd>
     <dt>Aprender con otros (Comunidad de Indagación)</dt>
     <dd>Dentro del OVA, el docente analiza casos, recibe retroalimentación y diseña su actividad. Pero la conversación sigue por fuera: en los espacios de formación del colegio comparte su diseño con sus colegas y recibe los comentarios del docente insignia.</dd>
     <dt>Lo que la tecnología cambia aquí (SAMR: modificación)</dt>
     <dd>Una guía impresa no podría responderle al docente en el momento ni ajustarse a su nivel. Aquí cada respuesta de los casos tiene retroalimentación inmediata, el borrador se revisa al instante y la ruta cambia según el diagnóstico.</dd>
     <dt>Pensado para la conectividad real del colegio</dt>
-    <dd>La página es liviana y no pide registro ni instalación. Después de abrirla una vez con internet funciona sin conexión, y la plantilla se puede imprimir para trabajar en papel. Nada importante depende de estar conectado.</dd>
+    <dd>La página es liviana y no pide registro ni instalación. Después de abrirla una vez con internet funciona sin conexión, y la plantilla se puede imprimir para trabajar en papel. Solo los videos y la encuesta inicial necesitan internet; el resto del recorrido funciona sin ellos.</dd>
   </dl>
 
   <h3>Referencias</h3>
@@ -493,7 +541,9 @@
 
   <h3>Recursos utilizados</h3>
   <ul class="fuentes">
-    <li>Los textos, los casos de clase, la infografía del continuo TIC–TAC–TEP y los íconos los hicimos nosotros. Los casos son inventados, igual que los nombres de los profesores que aparecen en ellos.</li>
+    <li>Los textos, los casos de clase, la infografía del continuo TIC–TAC–TEP, la infografía del recorrido para elegir una herramienta (hecha en Canva), la encuesta inicial (en Google Forms) y los íconos los hicimos nosotros. Los casos son inventados, igual que los nombres de los profesores que aparecen en ellos.</li>
+    <li>Videos de YouTube incluidos con el reproductor de la plataforma. Los derechos son de sus autores: «Las TICS de la educación en 2026» (Aprendizaje Virtual), «TIC, TAC y TEP: transforma tu aula paso a paso» (Enseñar con IA), «Fotosíntesis» (Es Ciencia), «Proceso de la fotosíntesis explicado muy fácilmente» (Interés Agronómico) y «Experimento sobre la fotosíntesis» (juan andres).</li>
+    <li>Simulador «Propiedades de los gases», de PhET Interactive Simulations, Universidad de Colorado Boulder, mencionado en el ejemplo de la teoría de los gases.</li>
     <li>Tipografía <em>Atkinson Hyperlegible</em>, de Braille Institute of America, con licencia SIL Open Font License 1.1.</li>
     <li>Tipografía <em>Lexend</em>, de Bonnie Shaver-Troup, Thomas Jockin y colaboradores, con licencia SIL Open Font License 1.1.</li>
     <li>Las tipografías se cargan desde Google Fonts. Si no hay conexión, el navegador usa sus propias fuentes.</li>
