@@ -15,6 +15,7 @@ index.html      Página única con todo el recorrido (tres momentos + créditos)
 css/styles.css  Estilos (accesibilidad, contraste AA, impresión)
 js/app.js       Lógica (navegación, progreso, ruta sugerida, casos,
                 plantilla, retroalimentación automática, descarga)
+images/         Infografía del recorrido para elegir una herramienta
 sw.js           Modo sin conexión (copia del OVA en el navegador)
 LICENSE         Licencia CC BY-NC-SA 4.0
 ```
@@ -37,17 +38,22 @@ primera visita también funciona sin conexión en ese mismo navegador.
   imprimir y trabajar sin conexión.
 - **Reinicio del avance** desde el panel Ayuda, pensado para computadores
   compartidos.
+- **Videos de apoyo** en la bienvenida y en el Momento 1, una **encuesta
+  inicial opcional** en Google Forms y una **infografía** con un ejemplo
+  completo de selección de herramienta (con versión en texto y enlace a Canva).
 
-## Agregar el video de bienvenida
+## Agregar o cambiar un video
 
-En `index.html`, busca `id="video-bienvenida"` y pega la URL de inserción del
-video en el atributo `data-video`, por ejemplo:
+En `index.html`, cada video es un bloque como este. Cambia el ID del video en
+`data-video` y su nombre en `data-titulo`:
 
 ```html
-<div class="video-marco" id="video-bienvenida" data-video="https://www.youtube-nocookie.com/embed/ID_DEL_VIDEO" hidden></div>
+<div class="video-marco" data-video="https://www.youtube-nocookie.com/embed/ID_DEL_VIDEO" data-titulo="Video: nombre del video" hidden></div>
 ```
 
-El texto de bienvenida queda debajo como versión en texto del video.
+Para un video corto (*short*) vertical, agrega la clase `video-vertical`.
+Los videos necesitan internet; sin conexión, el OVA muestra un aviso en su
+lugar. Recuerda dar el crédito del video en la sección «Recursos utilizados».
 
 ## Publicar cambios
 
