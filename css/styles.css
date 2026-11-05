@@ -329,6 +329,9 @@ abbr{text-decoration:underline dotted; text-underline-offset:4px; text-decoratio
 /* Infografía en imagen con versión en texto */
 .infografia-imagen{padding:.6rem}
 .infografia-imagen img{display:block; width:100%; height:auto; border-radius:10px}
+.infografia-enlace{display:block; border-radius:10px; transition:transform .2s ease, box-shadow .2s ease}
+.infografia-enlace:hover{transform:translateY(-2px); box-shadow:0 10px 24px -12px rgba(28,37,65,.45)}
+.infografia-enlace:focus-visible{outline:3px solid var(--m2); outline-offset:3px}
 .infografia-imagen figcaption{padding:0 .6rem}
 .version-texto{
   background:var(--hoja); border:1px solid var(--borde); border-radius:16px;
