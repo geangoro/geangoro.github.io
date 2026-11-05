@@ -310,21 +310,30 @@
     if (!panelAyuda.hidden) { cerrarPaneles(); botonAyuda.focus(); }
   });
 
-  /* ---------- Video de bienvenida (opcional) ---------- */
-  (function () {
-    var marco = document.getElementById("video-bienvenida");
-    var src = marco && marco.getAttribute("data-video");
+  /* ---------- Videos de YouTube ----------
+     Cada .video-marco con data-video recibe su reproductor. Sin conexión
+     se muestra un aviso, porque el video no se puede cargar. */
+  document.querySelectorAll(".video-marco[data-video]").forEach(function (marco) {
+    var src = marco.getAttribute("data-video");
     if (!src) return;
-    var iframe = document.createElement("iframe");
-    iframe.src = src;
-    iframe.title = "Video de bienvenida al recurso Del TIC al TAC";
-    iframe.loading = "lazy";
-    iframe.allow = "accelerometer; encrypted-media; gyroscope; picture-in-picture";
-    iframe.allowFullscreen = true;
-    marco.appendChild(iframe);
+    if (navigator.onLine === false) {
+      var aviso = document.createElement("p");
+      aviso.className = "video-aviso";
+      aviso.textContent = "Este video necesita conexión a internet. El resto del paso funciona sin él.";
+      marco.classList.add("sin-conexion");
+      marco.appendChild(aviso);
+    } else {
+      var iframe = document.createElement("iframe");
+      iframe.src = src;
+      iframe.title = marco.getAttribute("data-titulo") || "Video";
+      iframe.loading = "lazy";
+      iframe.allow = "accelerometer; encrypted-media; gyroscope; picture-in-picture";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      iframe.allowFullscreen = true;
+      marco.appendChild(iframe);
+    }
     marco.hidden = false;
-    document.getElementById("titulo-mensaje").textContent = "Versión en texto del video";
-  })();
+  });
 
   /* ---------- Autodiagnóstico y ruta sugerida ---------- */
   var ESCALA = ["Nunca", "A veces", "Casi siempre", "Siempre"];
@@ -391,7 +400,9 @@
     });
     persistir();
     var salida = document.getElementById("resultado-diagnostico");
+    var encuesta = document.getElementById("encuesta-externa");
     salida.hidden = false;
+    encuesta.hidden = respondidas < PREGUNTAS.length;
     if (respondidas < PREGUNTAS.length) {
       salida.innerHTML = "<strong>Te faltan " + (PREGUNTAS.length - respondidas) + " afirmaciones por responder.</strong>Responde las cinco para ver tu resultado y la ruta que te sugerimos.";
       var primera = PREGUNTAS.filter(function (n) { return !document.querySelector('input[name="' + n + '"]:checked'); })[0];
