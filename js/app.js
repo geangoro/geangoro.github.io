@@ -14,12 +14,26 @@
 
   /* ---------- Estado persistente ---------- */
   function estadoInicial() {
-    return { paso: "bienvenida", maximo: 0, plantilla: {}, cotejo: {}, diagnostico: {}, casos: {} };
+    return { paso: "bienvenida", maximoId: "bienvenida", plantilla: {}, cotejo: {}, diagnostico: {}, casos: {} };
   }
+  /* Orden de los pasos en la primera versión del OVA. Esa versión guardaba
+     el paso más avanzado como posición numérica («maximo»); ahora se guarda
+     su identificador («maximoId») para que agregar pasos no altere el avance. */
+  var PASOS_V1 = ["bienvenida", "m1-continuum", "m1-diagnostico", "m2-criterios", "m2-componentes",
+                  "m2-casos", "m3-plantilla", "m3-revision", "creditos"];
   var estado = estadoInicial();
   try {
     var guardado = localStorage.getItem(CLAVE);
-    if (guardado) estado = Object.assign(estado, JSON.parse(guardado));
+    if (guardado) {
+      var previo = JSON.parse(guardado);
+      if (!previo.maximoId) {
+        var maximoV1 = PASOS_V1[Math.max(0, Math.min(parseInt(previo.maximo, 10) || 0, PASOS_V1.length - 1))];
+        /* Quien llegó a los créditos ya había terminado todo el recorrido */
+        previo.maximoId = maximoV1 === "creditos" ? "m3-compartir" : maximoV1;
+      }
+      delete previo.maximo;
+      estado = Object.assign(estado, previo);
+    }
   } catch (e) { /* sin almacenamiento: el OVA funciona igual en memoria */ }
 
   function persistir() {
@@ -76,7 +90,8 @@
 
   /* Orden de aparición en cascada de las tarjetas de cada paso */
   [".recorrido-resumen li", ".fichas .criterio", ".piezas .pieza", ".ejemplo-par .ejemplo",
-   ".diagnostico fieldset", ".lista-cotejo .cotejo-item", ".reflexion li", ".plantilla > .campo, .plantilla > .campo-duo"
+   ".diagnostico fieldset", ".lista-cotejo .cotejo-item", ".reflexion li", ".plantilla > .campo, .plantilla > .campo-duo",
+   ".ruta-etapas .ruta-etapa", ".herramientas .herramienta", ".dua .dua-principio", ".roles .rol"
   ].forEach(function (selector) {
     document.querySelectorAll(selector).forEach(function (el, i) { el.style.setProperty("--i", i); });
   });
@@ -87,16 +102,21 @@
   }
 
   /* ---------- Recorrido ---------- */
+  /* libre: el paso se puede consultar en cualquier momento y no cuenta
+     como avance (no desbloquea los pasos anteriores a él). */
   var PASOS = [
     { id: "bienvenida",     nombre: "Bienvenida", momento: 0 },
+    { id: "ruta",           nombre: "La ruta completa de la experiencia", momento: 0 },
     { id: "m1-continuum",   nombre: "El continuo TIC–TAC", momento: 1 },
     { id: "m1-diagnostico", nombre: "¿Cómo usas hoy la tecnología?", momento: 1 },
     { id: "m2-criterios",   nombre: "Cuatro criterios para elegir", momento: 2 },
     { id: "m2-componentes", nombre: "Las tres piezas de una actividad", momento: 2 },
     { id: "m2-casos",       nombre: "Analiza tres casos", momento: 2 },
-    { id: "m3-plantilla",   nombre: "Diseña tu actividad", momento: 3 },
-    { id: "m3-revision",    nombre: "Revisa, descarga y reflexiona", momento: 3 },
-    { id: "creditos",       nombre: "Créditos y licencia", momento: 0 }
+    { id: "m3-plantilla",   nombre: "Diseña tu guía de trabajo", momento: 3 },
+    { id: "m3-revision",    nombre: "Revisa tu diseño con la rúbrica", momento: 3 },
+    { id: "m3-compartir",   nombre: "Comparte y mejora tu guía", momento: 3 },
+    { id: "fundamentos",    nombre: "Fundamentos de la ruta", momento: 0, libre: true },
+    { id: "creditos",       nombre: "Créditos y licencia", momento: 0, libre: true }
   ];
   var MOMENTOS = ["", "Momento 1: Reconocer", "Momento 2: Aprender y practicar", "Momento 3: Crear"];
 
@@ -114,6 +134,16 @@
     return -1;
   }
 
+  /* Posición del paso más avanzado al que ha llegado el docente */
+  function indiceMaximo() {
+    return Math.max(0, indicePaso(estado.maximoId));
+  }
+
+  /* ¿Se puede abrir este paso? Sí, si ya se llegó a él o si es de consulta libre */
+  function pasoDisponible(idx) {
+    return idx >= 0 && (idx <= indiceMaximo() || !!PASOS[idx].libre);
+  }
+
   /* modoHistorial: "push" (por defecto) agrega una entrada al historial
      para que el botón «atrás» regrese al paso anterior; "replace" la
      reemplaza; "none" no toca el historial (al responder a «atrás»). */
@@ -129,7 +159,7 @@
     seccion.hidden = false;
     var cambio = estado.paso !== id;
     estado.paso = id;
-    if (idx > estado.maximo) estado.maximo = idx;
+    if (idx > indiceMaximo() && !PASOS[idx].libre) estado.maximoId = id;
     persistir();
 
     /* Progreso */
@@ -166,7 +196,15 @@
      que se crean después, como los de la ruta sugerida) */
   document.addEventListener("click", function (ev) {
     var b = ev.target.closest("[data-goto]");
-    if (b) irA(b.getAttribute("data-goto"));
+    if (!b) return;
+    irA(b.getAttribute("data-goto"));
+    /* data-ancla: además de cambiar de paso, lleva a una sección del paso */
+    var ancla = b.getAttribute("data-ancla") && document.getElementById(b.getAttribute("data-ancla"));
+    if (ancla) {
+      ancla.setAttribute("tabindex", "-1");
+      ancla.scrollIntoView({ behavior: MOVIMIENTO_REDUCIDO ? "auto" : "smooth", block: "start" });
+      ancla.focus({ preventScroll: true });
+    }
   });
 
   /* Enlace «Saltar al contenido»: lleva el foco al contenido sin
@@ -217,7 +255,7 @@
       b.type = "button";
       b.textContent = p.nombre;
       if (i === actual) { b.className = "actual"; b.setAttribute("aria-current", "step"); }
-      if (i > estado.maximo) {
+      if (!pasoDisponible(i)) {
         b.disabled = true;
         b.title = "Aún no has llegado a este paso";
       } else {
@@ -233,7 +271,7 @@
 
   /* ---------- Reiniciar (computadores compartidos) ---------- */
   document.getElementById("btn-reiniciar").addEventListener("click", function () {
-    if (!window.confirm("Esto borra tu avance, tus respuestas y tu actividad de este dispositivo. ¿Quieres continuar?")) return;
+    if (!window.confirm("Esto borra tu avance, tus respuestas y tu guía de este dispositivo. ¿Quieres continuar?")) return;
     try { localStorage.removeItem(CLAVE); } catch (e) {}
     location.replace(location.pathname + location.search);
   });
@@ -384,10 +422,10 @@
     integracion: {
       titulo: "Tu punto de partida: ya integras la tecnología",
       texto: "Ya usas la tecnología con intención pedagógica en varias de tus clases. Este recurso te puede servir para ordenar lo que haces, tener más argumentos para justificar tus diseños y compartir tu experiencia con tus colegas.",
-      ruta: "Te sugerimos poner a prueba tu criterio con los casos o pasar directo a diseñar tu actividad.",
+      ruta: "Te sugerimos poner a prueba tu criterio con los casos o pasar directo a diseñar tu guía de trabajo.",
       botones: [
         { paso: "m2-casos", texto: "Ir directo a los casos", principal: true },
-        { paso: "m3-plantilla", texto: "Ir directo a diseñar mi actividad" }
+        { paso: "m3-plantilla", texto: "Ir directo a diseñar mi guía" }
       ]
     }
   };
@@ -771,7 +809,7 @@
     var salida = document.getElementById("resultado-cotejo");
     if (marcados === 0) { salida.innerHTML = ""; return; }
     if (marcados === total) {
-      salida.innerHTML = "<strong>✔ Tu diseño cumple toda la lista.</strong>Tu actividad tiene un propósito claro, una herramienta bien justificada y una evaluación que coincide con el objetivo. Ya puedes descargarla y compartirla con el docente insignia.";
+      salida.innerHTML = "<strong>✔ Tu diseño cumple toda la lista.</strong>Tu guía tiene un propósito claro, una herramienta bien justificada y una evaluación que coincide con el objetivo. Ahora revísala con la rúbrica formativa; después descárgala y publícala en Padlet antes de la plenaria.";
       if (interactivo) celebrar(salida);
     } else {
       salida.innerHTML = "<strong>Llevas " + marcados + " de " + total + " criterios.</strong>Vuelve a la plantilla con el botón Anterior y ajusta lo que falta. Tus marcas quedan guardadas.";
@@ -784,7 +822,7 @@
     var d = datosPlantilla();
     var linea = "----------------------------------------";
     return [
-      "DEL TIC AL TAC — MI ACTIVIDAD DE ENSEÑANZA CON TAC",
+      "DEL TIC AL TAC — MI GUÍA DE TRABAJO PARA UNA ACTIVIDAD DE ENSEÑANZA CON TAC",
       "OVA de formación docente · Colegio Colsubsidio Maiporé",
       "Maestría MITE · Universidad El Bosque",
       linea,
@@ -801,22 +839,22 @@
       "HERRAMIENTA DIGITAL ELEGIDA",
       d["p-herramienta"] || "(sin diligenciar)",
       "",
-      "JUSTIFICACIÓN DE LA HERRAMIENTA (criterios)",
+      "JUSTIFICACIÓN PEDAGÓGICA DE LA HERRAMIENTA (criterios)",
       d["p-justificacion"] || "(sin diligenciar)",
       "",
       "C. EVALUACIÓN",
       d["p-evaluacion"] || "(sin diligenciar)",
       linea,
-      "Diseñaste esta actividad en el OVA Del TIC al TAC.",
-      "Compártela con el docente insignia para recibir",
-      "comentarios en los espacios de formación.",
+      "Borrador construido en el OVA Del TIC al TAC.",
+      "Publícalo en Padlet antes de la plenaria para recibir",
+      "la retroalimentación de un compañero (rúbrica formativa).",
       "Licencia del OVA: CC BY-NC-SA 4.0"
     ].join("\r\n");
   }
 
   function nombreArchivo() {
     var n = normalizar(datosPlantilla()["p-nombre"]).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    return "mi-actividad-tac" + (n ? "-" + n : "") + ".txt";
+    return "mi-guia-tac" + (n ? "-" + n : "") + ".txt";
   }
 
   document.getElementById("btn-descargar").addEventListener("click", function () {
@@ -837,7 +875,7 @@
     { id: "p-objetivo", titulo: "A. Objetivo de aprendizaje", ayuda: "¿Qué van a aprender? Empieza con «Los estudiantes podrán…» y usa una acción que se pueda ver." },
     { id: "p-actividad", titulo: "B. Actividad", ayuda: "¿Qué van a hacer los estudiantes? Describe la tarea paso a paso y qué van a entregar." },
     { id: "p-herramienta", titulo: "Herramienta digital elegida", ayuda: "Que sea gratuita o de libre acceso, y que funcione con los equipos y el internet del colegio." },
-    { id: "p-justificacion", titulo: "Justificación (criterios)", ayuda: "¿Por qué elegiste esa herramienta? Usa por lo menos dos criterios: propósito, pertinencia, viabilidad o valor agregado." },
+    { id: "p-justificacion", titulo: "Justificación pedagógica (criterios)", ayuda: "¿Por qué elegiste esa herramienta? Usa por lo menos dos criterios: propósito, pertinencia, viabilidad o valor agregado." },
     { id: "p-evaluacion", titulo: "C. Evaluación", ayuda: "¿Cómo vas a saber que aprendieron? Cuenta qué evidencia vas a recoger y cómo la vas a valorar." }
   ];
 
@@ -849,7 +887,7 @@
       return "<p>" + escaparHtml(d[id] || "—") + "</p>";
     }
     var html =
-      "<h1>" + (enBlanco ? "Plantilla: mi actividad de enseñanza con TAC" : "Mi actividad de enseñanza con TAC") + "</h1>" +
+      "<h1>" + (enBlanco ? "Plantilla: mi guía de trabajo para una actividad de enseñanza con TAC" : "Mi guía de trabajo para una actividad de enseñanza con TAC") + "</h1>" +
       "<p class='doc-meta'>Del TIC al TAC · OVA de formación docente · Colegio Colsubsidio Maiporé · Maestría MITE, Universidad El Bosque</p>";
     if (enBlanco) {
       html += "<p><strong>Docente:</strong> ______________________ &nbsp; <strong>Asignatura:</strong> ________________ &nbsp; <strong>Grado:</strong> __________</p>";
@@ -863,7 +901,7 @@
     });
     html += enBlanco
       ? "<p class='doc-meta'>Cuando tengas internet, pasa tu diseño al OVA para que lo revise automáticamente. Licencia CC BY-NC-SA 4.0</p>"
-      : "<p class='doc-meta'>Evidencia del recorrido por el OVA · Licencia CC BY-NC-SA 4.0</p>";
+      : "<p class='doc-meta'>Borrador de la guía (etapa 2). Publícalo en Padlet antes de la plenaria · Licencia del OVA: CC BY-NC-SA 4.0</p>";
     area.innerHTML = html;
   }
 
@@ -881,18 +919,31 @@
   });
   window.addEventListener("afterprint", function () { impresionPreparada = false; });
 
+  /* ---------- Rúbrica formativa ----------
+     En pantallas pequeñas la tabla se muestra como tarjetas (CSS). Los roles
+     explícitos conservan la estructura de tabla para los lectores de pantalla
+     aunque cambie la forma de mostrarla. */
+  document.querySelectorAll("table.rubrica").forEach(function (tabla) {
+    tabla.setAttribute("role", "table");
+    tabla.querySelectorAll("thead, tbody").forEach(function (g) { g.setAttribute("role", "rowgroup"); });
+    tabla.querySelectorAll("tr").forEach(function (f) { f.setAttribute("role", "row"); });
+    tabla.querySelectorAll("thead th").forEach(function (c) { c.setAttribute("role", "columnheader"); });
+    tabla.querySelectorAll("tbody th").forEach(function (c) { c.setAttribute("role", "rowheader"); });
+    tabla.querySelectorAll("td").forEach(function (c) { c.setAttribute("role", "cell"); });
+  });
+
   /* ---------- Inicio ---------- */
   var hashInicial = (location.hash || "").replace("#", "");
   var pasoInicial = indicePaso(estado.paso) >= 0 ? estado.paso : "bienvenida";
   var idxHash = indicePaso(hashInicial);
-  if (idxHash >= 0 && idxHash <= estado.maximo) pasoInicial = hashInicial;
+  if (pasoDisponible(idxHash)) pasoInicial = hashInicial;
   irA(pasoInicial, "replace");
 
   /* Botón «atrás» / «adelante» del navegador */
   window.addEventListener("popstate", function (ev) {
     var id = (ev.state && ev.state.paso) || (location.hash || "").replace("#", "");
     var idx = indicePaso(id);
-    if (idx >= 0 && idx <= estado.maximo && id !== estado.paso) irA(id, "none");
+    if (pasoDisponible(idx) && id !== estado.paso) irA(id, "none");
   });
 
   /* ---------- Modo sin conexión ---------- */

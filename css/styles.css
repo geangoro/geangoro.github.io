@@ -587,6 +587,124 @@ abbr{text-decoration:underline dotted; text-underline-offset:4px; text-decoratio
 .licencia svg{flex-shrink:0; margin-top:.2rem}
 .cierre-final{background:var(--marcador-tinte); box-shadow:inset 6px 0 0 var(--marcador)}
 
+/* ---------- Resultado de aprendizaje (bienvenida) ---------- */
+.resultado-aprendizaje h2.destacado-titulo{font-size:1.1rem; margin:0 0 .4rem}
+
+/* ---------- Ruta completa: cinco etapas en línea de tiempo ---------- */
+.ruta-etapas{list-style:none; margin:1.4rem 0; padding:0; position:relative}
+.ruta-etapas::before{
+  content:""; position:absolute; left:1.05rem; top:.6rem; bottom:.6rem; width:3px;
+  background:var(--borde); border-radius:2px;
+}
+.ruta-etapa{
+  position:relative; margin:0 0 .9rem; padding:1rem 1.2rem 1rem 3.2rem;
+  background:var(--hoja); border:1px solid var(--borde); border-radius:16px;
+  box-shadow:var(--sombra-ficha);
+}
+.ruta-etapa::before{
+  content:""; position:absolute; left:.6rem; top:1.25rem;
+  width:1rem; height:1rem; border-radius:50%;
+  background:var(--hoja); border:4px solid var(--tinta);
+}
+.ruta-etapa:last-child{background:var(--marcador-tinte); border-color:#f0dc8a}
+.ruta-etapa h3{margin:0 0 .35rem; font-size:1.08rem; display:flex; flex-wrap:wrap; align-items:baseline; gap:.2rem .6rem}
+.ruta-num{
+  font-size:.78rem; font-weight:800; letter-spacing:.02em; text-transform:uppercase;
+  background:var(--tinta); color:#fff; border-radius:999px; padding:.1rem .6rem;
+}
+.ruta-etapa p{margin:.35rem 0; font-size:.96rem}
+.ruta-datos{color:var(--tinta-suave)}
+.ruta-fase{font-size:.88rem !important; font-weight:700; color:var(--m2)}
+.ruta-compacta .ruta-etapa{padding-top:.8rem; padding-bottom:.8rem}
+.momento-3 .ruta-num{background:var(--m3)}
+.momento-3 .ruta-etapa::before{border-color:var(--m3)}
+
+/* ---------- Herramientas de comunicación ---------- */
+.herramientas{display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin:1rem 0}
+.herramienta{background:var(--papel); border-radius:14px; padding:.85rem 1.1rem}
+.herramienta dt{font-family:var(--fuente-display); font-weight:600}
+.herramienta-tipo{font-family:var(--fuente-cuerpo); font-weight:400; font-size:.88rem; color:var(--tinta-suave)}
+.herramienta dd{margin:.25rem 0 0; font-size:.95rem}
+
+/* ---------- Ficha de integración didáctica ---------- */
+.ficha-tecnica{
+  display:grid; grid-template-columns:minmax(9rem, 14rem) 1fr; margin:1rem 0;
+  border:1px solid var(--borde); border-radius:14px; overflow:hidden;
+}
+.ficha-tecnica dt, .ficha-tecnica dd{margin:0; padding:.6rem 1rem; border-top:1px solid var(--borde); font-size:.95rem}
+.ficha-tecnica dt:first-of-type, .ficha-tecnica dt:first-of-type + dd{border-top:none}
+.ficha-tecnica dt{font-weight:700; background:var(--papel)}
+
+/* ---------- Fundamentación de los criterios ---------- */
+.criterio-pregunta, .criterio-fundamento{font-size:.92rem !important}
+.criterio-pregunta{padding-top:.5rem; border-top:1px dashed var(--borde-fuerte)}
+.criterio-fundamento{color:var(--tinta-suave)}
+.samr{margin:1.6rem 0; background:var(--papel); border-radius:16px; padding:1.1rem 1.3rem}
+.samr h3{margin-top:0}
+.samr-niveles{display:grid; grid-template-columns:1fr 1fr; gap:.7rem; margin:1rem 0}
+.samr-niveles > div{background:var(--hoja); border-radius:12px; padding:.75rem 1rem}
+.samr-niveles dt{font-family:var(--fuente-display); font-weight:600; display:flex; align-items:center; gap:.5rem}
+.samr-niveles dd{margin:.3rem 0 0; font-size:.93rem}
+.samr-letra{
+  display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+  width:1.8rem; height:1.8rem; border-radius:50%;
+  background:var(--m2); color:#fff; font-weight:800; font-size:.9rem;
+}
+
+/* ---------- Rúbrica formativa ---------- */
+.rubrica-marco{margin:1.2rem 0 .6rem; overflow-x:auto; border-radius:14px}
+.rubrica-marco:focus-visible{outline:3px solid var(--tinta); outline-offset:2px}
+.rubrica{width:100%; border-collapse:separate; border-spacing:0; font-size:.86rem; line-height:1.45; border:1px solid var(--borde-fuerte); border-radius:14px; overflow:hidden}
+.rubrica caption{caption-side:top; text-align:left; font-family:var(--fuente-display); font-weight:600; font-size:.95rem; padding:0 0 .6rem}
+.rubrica th, .rubrica td{padding:.65rem .7rem; vertical-align:top; text-align:left; border-top:1px solid var(--borde)}
+.rubrica td + td, .rubrica th + td{border-left:1px solid var(--borde)}
+.rubrica thead th{background:var(--tinta); color:#fff; font-family:var(--fuente-display); font-weight:600; border-top:none}
+.rubrica thead th + th{border-left:1px solid rgba(255,255,255,.25)}
+.rubrica tbody th{width:17%; background:var(--m3-tinte); font-family:var(--fuente-display); font-weight:600; font-size:.9rem}
+.rubrica tbody tr:nth-child(even) td{background:#f8f9fc}
+.rubrica-num{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:1.5rem; height:1.5rem; border-radius:50%; margin:0 .3rem .25rem 0;
+  background:var(--m3); color:#fff; font-size:.8rem; font-weight:800; vertical-align:middle;
+}
+.rubrica-valora{margin:.6rem 0 0}
+.rubrica-valora dt{font-weight:700; margin-top:.6rem}
+.rubrica-valora dd{margin:.15rem 0 0; font-size:.94rem}
+.rubrica-momento{font-weight:400; color:var(--tinta-suave)}
+.nota-archivo{font-weight:400}
+
+/* ---------- Revisión entre pares ---------- */
+.roles{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1rem 0}
+.rol{background:var(--m3-tinte); border-radius:16px; padding:1rem 1.2rem}
+.rol h3{margin:0 0 .4rem}
+.rol ol{margin:.3rem 0 0; padding-left:1.25rem}
+.rol li{margin:.35rem 0; font-size:.95rem}
+.modelo-comentario{
+  margin:.6rem 0; padding:.8rem 1rem; background:var(--hoja); border:1px dashed var(--borde-fuerte); border-radius:10px;
+  font-family:var(--fuente-cuerpo); font-size:.95rem; line-height:1.7; white-space:pre-wrap;
+}
+
+/* ---------- Fundamentos: Design Thinking y DUA ---------- */
+.tabla-marco{margin:1rem 0; overflow-x:auto}
+.tabla-marco:focus-visible{outline:3px solid var(--tinta); outline-offset:2px}
+.tabla-simple{width:100%; border-collapse:collapse; font-size:.92rem; line-height:1.45}
+.tabla-simple caption{caption-side:top; text-align:left; font-size:.88rem; color:var(--tinta-suave); padding-bottom:.5rem}
+.tabla-simple th, .tabla-simple td{padding:.6rem .75rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--borde)}
+.tabla-simple thead th{background:var(--tinta); color:#fff; font-family:var(--fuente-display); font-weight:600}
+.tabla-simple tbody th{font-family:var(--fuente-display); font-weight:600; white-space:nowrap}
+.dua{display:grid; gap:.9rem; margin:1rem 0}
+.dua-principio{background:var(--papel); border-radius:16px; padding:1rem 1.2rem; box-shadow:inset 6px 0 0 var(--marcador)}
+.dua-principio h4{font-family:var(--fuente-display); font-size:1.02rem; font-weight:600; margin:0 0 .3rem}
+.dua-principio ul{margin:.3rem 0 0; padding-left:1.2rem}
+.dua-principio li{margin:.3rem 0; font-size:.95rem}
+
+/* ---------- Pie de página común ---------- */
+.pie{max-width:var(--ancho); margin:-2.5rem auto 0; padding:0 1rem 2.5rem; font-size:.88rem; color:var(--tinta-suave); text-align:center}
+.pie p{margin:.4rem 0}
+.pie-licencia{display:flex; justify-content:center; align-items:flex-start; gap:.5rem; text-align:left}
+.pie-licencia svg{flex-shrink:0; margin-top:.1rem; color:var(--tinta)}
+.pie-enlaces{display:flex; justify-content:center; flex-wrap:wrap; gap:.3rem .6rem}
+
 /* ---------- Navegación y botones ---------- */
 .navegacion{
   display:flex; justify-content:space-between; align-items:center; gap:.8rem;
@@ -699,7 +817,8 @@ body[data-dir="atras"] .paso{animation-name:entrar-atras}
 
 /* Tarjetas en cascada */
 .recorrido-resumen li, .fichas .criterio, .piezas .pieza, .ejemplo-par .ejemplo,
-.diagnostico fieldset, .cotejo-item, .reflexion li, .plantilla > .campo, .plantilla > .campo-duo, .caso{
+.diagnostico fieldset, .cotejo-item, .reflexion li, .plantilla > .campo, .plantilla > .campo-duo, .caso,
+.ruta-etapa, .herramienta, .dua-principio, .rol{
   animation:subir .5s cubic-bezier(.2,.7,.2,1) backwards;
   animation-delay:calc(.25s + var(--i, 0) * 70ms);
 }
@@ -749,6 +868,36 @@ body[data-dir="atras"] .paso{animation-name:entrar-atras}
   .piezas{gap:1rem}
   .pieza + .pieza::before{left:2rem; top:-1rem; width:3px; height:1rem; transform-origin:center top; animation-name:trazo-v}
   .portada[data-num]::after{font-size:7.5rem; bottom:-1.6rem}
+}
+/* Rúbrica en tarjetas: en tabletas y celulares cada criterio es una tarjeta
+   con sus cuatro niveles; los encabezados de columna quedan disponibles
+   para lectores de pantalla y cada nivel muestra su nombre como texto. */
+@media (max-width:48rem){
+  .rubrica, .rubrica tbody, .rubrica tr, .rubrica th, .rubrica td{display:block; width:auto}
+  .rubrica{border:none; border-radius:0; overflow:visible; font-size:.92rem}
+  .rubrica caption{display:block}
+  .rubrica thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap}
+  .rubrica tbody tr{border:1px solid var(--borde-fuerte); border-radius:14px; overflow:hidden; margin:0 0 1rem}
+  .rubrica tbody th{width:auto; border-top:none; font-size:1rem; padding:.75rem 1rem}
+  .rubrica td, .rubrica th + td, .rubrica td + td{border-left:none; padding:.6rem 1rem}
+  .rubrica tbody tr:nth-child(even) td{background:none}
+  .rubrica td::before{
+    content:attr(data-nivel);
+    content:attr(data-nivel) / "";
+    display:block; font-family:var(--fuente-display); font-weight:600; font-size:.82rem;
+    text-transform:uppercase; letter-spacing:.03em; color:var(--tinta-suave); margin-bottom:.15rem;
+  }
+  .rubrica-marco{overflow:visible}
+  .herramientas, .roles, .samr-niveles{grid-template-columns:1fr}
+}
+@media (max-width:30rem){
+  .ficha-tecnica{grid-template-columns:1fr}
+  .ficha-tecnica dd{border-top:none; padding-top:0}
+  .ficha-tecnica dt{background:none; padding-bottom:.15rem}
+  .tabla-simple{font-size:.84rem; hyphens:auto; -webkit-hyphens:auto}
+  .tabla-simple th, .tabla-simple td{padding:.5rem .45rem}
+  .tabla-simple tbody th{white-space:normal; hyphens:manual; -webkit-hyphens:manual}
+  .ruta-etapa{padding-left:2.8rem}
 }
 @media (max-width:38rem){
   main{padding:1rem .6rem 3rem}

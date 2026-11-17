@@ -11,11 +11,13 @@ Enlace del OVA: **https://geangoro.github.io/**
 ## Estructura
 
 ```
-index.html      Página única con todo el recorrido (tres momentos + créditos)
+index.html      Página única con todo el recorrido (ruta, tres momentos,
+                revisión entre pares, fundamentos y créditos)
 css/styles.css  Estilos (accesibilidad, contraste AA, impresión)
 js/app.js       Lógica (navegación, progreso, ruta sugerida, casos,
                 plantilla, retroalimentación automática, descarga)
 images/         Infografía del recorrido para elegir una herramienta
+documents/      Resultado de aprendizaje y rúbrica formativa (Word)
 sw.js           Modo sin conexión (copia del OVA en el navegador)
 LICENSE         Licencia CC BY-NC-SA 4.0
 ```
@@ -26,6 +28,12 @@ primera visita también funciona sin conexión en ese mismo navegador.
 
 ## Qué hace el OVA
 
+- **Resultado de aprendizaje y ruta completa** de la experiencia (una semana,
+  cinco etapas): OVA, borrador en Padlet, plenaria, revisión entre pares y
+  versión final. La experiencia termina con el ajuste de la guía; no incluye
+  su implementación con estudiantes.
+- **Herramientas de comunicación y colaboración** (OVA, WhatsApp, Google Meet
+  y Padlet) con la función de cada una, y la ficha de integración didáctica.
 - **Recorrido en tres momentos** (reconocer, aprender y practicar, crear), con
   menú, barra de progreso y soporte del botón «atrás» del navegador.
 - **Autodiagnóstico con ruta sugerida**: según el resultado, propone el
@@ -34,8 +42,15 @@ primera visita también funciona sin conexión en ese mismo navegador.
 - **Plantilla guiada** con autoguardado y **retroalimentación automática** del
   borrador (objetivo observable, criterios de la justificación, alineación
   objetivo–evaluación).
-- **Lista de cotejo**, descarga en PDF o texto, y plantilla en blanco para
-  imprimir y trabajar sin conexión.
+- **Lista de cotejo** para la primera revisión personal y **rúbrica formativa**
+  visible como tabla (con descarga en Word) para la autoevaluación y la
+  revisión entre pares.
+- Descarga del borrador en PDF o texto, y plantilla en blanco para imprimir y
+  trabajar sin conexión.
+- **Instrucciones para la revisión entre pares** (autor y revisor) y
+  **fundamentos de la ruta**: fases de Design Thinking con sus evidencias,
+  aplicación del DUA y referencias. Los fundamentos y los créditos se pueden
+  consultar en cualquier momento desde el menú o el pie de página.
 - **Reinicio del avance** desde el panel Ayuda, pensado para computadores
   compartidos.
 - **Videos de apoyo** en la bienvenida y en el Momento 1, una **encuesta
@@ -63,3 +78,10 @@ minutos.
 
 El modo sin conexión siempre pide primero la versión más reciente cuando hay
 internet, así que los cambios llegan a los docentes sin pasos adicionales.
+
+## Enlaces institucionales pendientes
+
+El OVA describe la función de WhatsApp, Google Meet y Padlet, pero no enlaza
+a ningún grupo, sesión o tablero. Cuando el equipo de formación tenga los
+enlaces reales, se pueden agregar en el paso «La ruta completa de la
+experiencia» (`index.html`, sección `#herramientas-comunicacion`).
