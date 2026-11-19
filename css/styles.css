@@ -897,6 +897,10 @@ body[data-dir="atras"] .paso{animation-name:entrar-atras}
   .tabla-simple{font-size:.84rem; hyphens:auto; -webkit-hyphens:auto}
   .tabla-simple th, .tabla-simple td{padding:.5rem .45rem}
   .tabla-simple tbody th{white-space:normal; hyphens:manual; -webkit-hyphens:manual}
+  /* Mediaciones: cada fila se vuelve una tarjeta con su enlace debajo */
+  .tabla-mediaciones thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+  .tabla-mediaciones tr{display:block; padding:.6rem 0; border-bottom:1px solid var(--borde)}
+  .tabla-mediaciones th, .tabla-mediaciones td{display:block; border:none; padding:.15rem .2rem; hyphens:manual; -webkit-hyphens:manual}
   .ruta-etapa{padding-left:2.8rem}
 }
 @media (max-width:38rem){

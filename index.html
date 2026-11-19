@@ -213,7 +213,7 @@
     <dt>Relación con otras herramientas</dt>
     <dd>WhatsApp para la coordinación, Google Meet para la plenaria virtual y Padlet para la revisión y el ajuste.</dd>
   </dl>
-  <p>¿Quieres saber por qué la ruta está diseñada así? En <button type="button" class="enlace-boton" data-goto="fundamentos">Fundamentos de la ruta</button> explicamos cómo se relaciona con Design Thinking y cómo se aplica el DUA. Puedes consultarlos en cualquier momento desde el <strong>Menú</strong>.</p>
+  <p>¿Quieres saber por qué la ruta está diseñada así? En <button type="button" class="enlace-boton" data-goto="fundamentos">Fundamentos de la ruta</button> resumimos las mediaciones de la experiencia, explicamos cómo construimos los cuatro criterios de selección, cómo se relaciona la ruta con Design Thinking y cómo se aplica el DUA. Puedes consultarlos en cualquier momento desde el <strong>Menú</strong>.</p>
 
   <nav class="navegacion" aria-label="Navegación del paso">
     <button class="btn" data-goto="bienvenida"><span aria-hidden="true">←</span> Anterior</button>
@@ -359,6 +359,17 @@
   </header>
   <p>Antes de abrir una aplicación, hazte estas cuatro preguntas. Empieza siempre por la primera: si la herramienta no sirve para lo que quieres que aprendan, no vale la pena seguir con las demás.</p>
   <p class="nota">Estos cuatro criterios orientan la <strong>selección de la tecnología</strong> mientras ideas tu actividad. No son los mismos cinco criterios de la rúbrica formativa, que valoran el diseño completo de tu guía y su revisión.</p>
+
+  <div class="destacado" id="origen-criterios">
+    <p class="destacado-titulo">¿De dónde salen estos cuatro criterios?</p>
+    <p>Son una <strong>elaboración propia del grupo de trabajo</strong>. No los tomamos de un instrumento publicado: los construimos a partir de tres marcos teóricos, y de cada uno derivamos una pregunta para elegir la tecnología.</p>
+    <ul>
+      <li><strong>Propósito</strong> y <strong>pertinencia</strong> se derivan del modelo TPACK (Mishra y Koehler, 2006): la herramienta se elige en función del contenido y de la estrategia pedagógica.</li>
+      <li><strong>Viabilidad</strong> se deriva del Diseño Universal para el Aprendizaje, DUA (CAST, 2024): las condiciones de acceso no deben convertirse en barreras.</li>
+      <li><strong>Valor agregado</strong> se deriva del modelo SAMR (Puentedura, 2010): qué cambia en la tarea cuando se usa la tecnología.</li>
+    </ul>
+    <p>Ninguno de estos marcos es, por sí solo, un instrumento para seleccionar herramientas. Por eso los integramos en una secuencia de cuatro preguntas. En <button type="button" class="enlace-boton" data-goto="fundamentos" data-ancla="instrumento-criterios">Fundamentos de la ruta</button> explicamos cómo lo construimos.</p>
+  </div>
 
   <div class="fichas">
   <div class="criterio" id="criterio-1">
@@ -713,7 +724,7 @@
     </li>
   </ol>
 
-  <h2>Instrucciones para la revisión entre pares</h2>
+  <h2 id="revision-pares">Instrucciones para la revisión entre pares</h2>
   <div class="roles">
     <div class="rol">
       <h3>Si eres el autor de la guía</h3>
@@ -784,6 +795,46 @@ Sugerencias concretas: …</pre>
     <h2>Por qué la ruta está diseñada así</h2>
   </header>
   <p>Esta sección explica los referentes metodológicos y pedagógicos de la experiencia. Puedes consultarla en cualquier momento desde el <strong>Menú</strong>.</p>
+
+  <h3 id="mediaciones">Mediaciones del OVA: dónde encontrar cada elemento</h3>
+  <p>La experiencia combina el OVA con herramientas de comunicación, espacios de colaboración e instrumentos de evaluación. Esta tabla resume cada mediación y lleva directamente al lugar del OVA donde se desarrolla.</p>
+  <div class="tabla-marco" role="region" aria-labelledby="tabla-mediaciones-titulo" tabindex="0">
+    <table class="tabla-simple tabla-mediaciones">
+      <caption id="tabla-mediaciones-titulo">Mediaciones de la experiencia y su ubicación en el OVA</caption>
+      <thead>
+        <tr><th scope="col">Mediación</th><th scope="col">Cómo se concreta</th><th scope="col">Dónde está</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Resultado de aprendizaje</th><td>Enunciado aprobado que orienta toda la experiencia y anuncia el producto esperado: la guía de trabajo.</td><td><button type="button" class="enlace-boton" data-goto="bienvenida">Bienvenida</button></td></tr>
+        <tr><th scope="row">Ruta de la experiencia</th><td>Cinco etapas: autodiagnóstico y recorrido formativo, borrador, plenaria, revisión entre pares y versión final.</td><td><button type="button" class="enlace-boton" data-goto="ruta">La ruta completa</button></td></tr>
+        <tr><th scope="row">Herramientas de comunicación</th><td>WhatsApp para la coordinación y Google Meet para la plenaria virtual.</td><td><button type="button" class="enlace-boton" data-goto="ruta" data-ancla="herramientas-comunicacion">Herramientas de comunicación y colaboración</button></td></tr>
+        <tr><th scope="row">Espacio colaborativo</th><td>Plenaria con el docente insignia y revisión entre pares en Padlet, con instrucciones para el autor y el revisor.</td><td><button type="button" class="enlace-boton" data-goto="m3-compartir" data-ancla="revision-pares">Comparte y mejora tu guía</button></td></tr>
+        <tr><th scope="row">Integración didáctica del OVA</th><td>Ficha con participantes, momento, duración, actividades que apoya, interacción y relación con las demás herramientas.</td><td><button type="button" class="enlace-boton" data-goto="ruta" data-ancla="integracion-didactica">Integración didáctica</button></td></tr>
+        <tr><th scope="row">Instrumento de selección</th><td>Cuatro criterios de elaboración propia (propósito, pertinencia, viabilidad y valor agregado), derivados de TPACK, DUA y SAMR.</td><td><button type="button" class="enlace-boton" data-goto="m2-criterios">Cuatro criterios para elegir</button></td></tr>
+        <tr><th scope="row">Rúbrica formativa</th><td>Cinco criterios y cuatro niveles de desempeño, visible como tabla y descargable en Word. Orienta la autoevaluación y la revisión entre pares.</td><td><button type="button" class="enlace-boton" data-goto="m3-revision" data-ancla="rubrica-formativa">Revisa tu diseño</button></td></tr>
+        <tr><th scope="row">DUA aplicado</th><td>Decisiones concretas de la ruta organizadas según los tres principios: compromiso, representación y acción y expresión.</td><td><button type="button" class="enlace-boton" data-goto="fundamentos" data-ancla="dua">¿Cómo se aplica el DUA?</button></td></tr>
+        <tr><th scope="row">Licencia</th><td>Creative Commons Atribución–NoComercial–CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0).</td><td><button type="button" class="enlace-boton" data-goto="creditos" data-ancla="licencia">Créditos y licencia</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="instrumento-criterios">Los cuatro criterios de selección: un instrumento de elaboración propia</h3>
+  <p>Los criterios de propósito, pertinencia, viabilidad y valor agregado son una <strong>elaboración propia del grupo de trabajo</strong>. Los derivamos de tres marcos teóricos que, por separado, no ofrecen un instrumento para seleccionar herramientas digitales: TPACK describe los conocimientos que el docente integra al enseñar con tecnología (Mishra y Koehler, 2006); el DUA propone principios para anticipar la diversidad de quienes aprenden (CAST, 2024), y SAMR describe qué cambia en una tarea cuando se usa tecnología (Puentedura, 2010). De cada marco tomamos lo que aporta a la decisión y lo convertimos en una pregunta orientadora.</p>
+  <div class="tabla-marco" role="region" aria-labelledby="tabla-criterios-titulo" tabindex="0">
+    <table class="tabla-simple">
+      <caption id="tabla-criterios-titulo">Derivación de los cuatro criterios de selección a partir de TPACK, DUA y SAMR</caption>
+      <thead>
+        <tr><th scope="col">Criterio</th><th scope="col">Marco de referencia</th><th scope="col">Qué tomamos del marco</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">1. Propósito</th><td>TPACK (Mishra y Koehler, 2006)</td><td>La decisión tecnológica parte del contenido y del objetivo de aprendizaje, no de la herramienta.</td></tr>
+        <tr><th scope="row">2. Pertinencia</th><td>TPACK (Mishra y Koehler, 2006)</td><td>La herramienta se ajusta al contenido, a la estrategia didáctica y a los estudiantes.</td></tr>
+        <tr><th scope="row">3. Viabilidad</th><td>DUA (CAST, 2024)</td><td>Las condiciones de acceso, participación y expresión no deben convertirse en barreras; se prevé una alternativa.</td></tr>
+        <tr><th scope="row">4. Valor agregado</th><td>SAMR (Puentedura, 2010)</td><td>Se justifica qué mejora aporta la tecnología frente a una alternativa sin ella, sin exigir un nivel determinado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Los criterios se aplican en orden: si la herramienta no responde al propósito, no tiene sentido valorar los demás. Se trata de un instrumento formativo para orientar y justificar la decisión, no de una escala de medición validada. Su uso se revisa en la autoevaluación, la plenaria y la revisión entre pares.</p>
 
   <h3 id="design-thinking">El recorrido sigue las fases de Design Thinking</h3>
   <p>Design Thinking organiza el recorrido formativo de los docentes: parte de sus necesidades, define un propósito, explora alternativas, construye un prototipo y lo pone a prueba con otros. No es una secuencia rígida, porque se puede volver a una fase anterior cuando hace falta, ni es una metodología para implementar la actividad con estudiantes.</p>
@@ -893,7 +944,7 @@ Sugerencias concretas: …</pre>
     <li>Los recursos externos (videos, simulador y tipografías) conservan sus propias licencias y atribuciones; no hacen parte de la licencia de este OVA.</li>
   </ul>
 
-  <h3>Licencia</h3>
+  <h3 id="licencia">Licencia</h3>
   <p class="licencia">
     <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="currentColor" stroke-width="2"/><text x="16" y="21" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor">CC</text></svg>
     <span>Compartimos este recurso con licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="license noopener"><strong>Creative Commons Atribución–NoComercial–CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</strong><span class="sr-only"> (se abre en otra pestaña)</span></a>. Puedes usarlo, copiarlo y adaptarlo, siempre que nos des crédito, no lo uses con fines comerciales y compartas tus versiones con la misma licencia.</span>
@@ -914,6 +965,8 @@ Sugerencias concretas: …</pre>
     <span><strong>Del TIC al TAC</strong> · Maestría MITE, Universidad El Bosque · Licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="license noopener">Creative Commons Atribución–NoComercial–CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)<span class="sr-only"> (se abre en otra pestaña)</span></a></span>
   </p>
   <p class="pie-enlaces">
+    <button type="button" class="enlace-boton" data-goto="fundamentos" data-ancla="mediaciones">Mediaciones del OVA</button>
+    <span aria-hidden="true">·</span>
     <button type="button" class="enlace-boton" data-goto="fundamentos">Fundamentos de la ruta</button>
     <span aria-hidden="true">·</span>
     <button type="button" class="enlace-boton" data-goto="creditos">Créditos y licencia</button>

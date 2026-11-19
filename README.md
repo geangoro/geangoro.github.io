@@ -48,7 +48,9 @@ primera visita también funciona sin conexión en ese mismo navegador.
 - Descarga del borrador en PDF o texto, y plantilla en blanco para imprimir y
   trabajar sin conexión.
 - **Instrucciones para la revisión entre pares** (autor y revisor) y
-  **fundamentos de la ruta**: fases de Design Thinking con sus evidencias,
+  **fundamentos de la ruta**: tabla de mediaciones del OVA con enlaces a cada
+  elemento, origen de los cuatro criterios de selección (elaboración propia
+  derivada de TPACK, DUA y SAMR), fases de Design Thinking con sus evidencias,
   aplicación del DUA y referencias. Los fundamentos y los créditos se pueden
   consultar en cualquier momento desde el menú o el pie de página.
 - **Reinicio del avance** desde el panel Ayuda, pensado para computadores
