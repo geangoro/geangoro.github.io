@@ -692,6 +692,8 @@ abbr{text-decoration:underline dotted; text-underline-offset:4px; text-decoratio
 .tabla-simple th, .tabla-simple td{padding:.6rem .75rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--borde)}
 .tabla-simple thead th{background:var(--tinta); color:#fff; font-family:var(--fuente-display); font-weight:600}
 .tabla-simple tbody th{font-family:var(--fuente-display); font-weight:600; white-space:nowrap}
+.lista-enlaces{list-style:none; margin:0; padding:0}
+.lista-enlaces li{margin:0 0 .35rem}
 .dua{display:grid; gap:.9rem; margin:1rem 0}
 .dua-principio{background:var(--papel); border-radius:16px; padding:1rem 1.2rem; box-shadow:inset 6px 0 0 var(--marcador)}
 .dua-principio h4{font-family:var(--fuente-display); font-size:1.02rem; font-weight:600; margin:0 0 .3rem}
@@ -897,10 +899,12 @@ body[data-dir="atras"] .paso{animation-name:entrar-atras}
   .tabla-simple{font-size:.84rem; hyphens:auto; -webkit-hyphens:auto}
   .tabla-simple th, .tabla-simple td{padding:.5rem .45rem}
   .tabla-simple tbody th{white-space:normal; hyphens:manual; -webkit-hyphens:manual}
-  /* Mediaciones: cada fila se vuelve una tarjeta con su enlace debajo */
-  .tabla-mediaciones thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
-  .tabla-mediaciones tr{display:block; padding:.6rem 0; border-bottom:1px solid var(--borde)}
-  .tabla-mediaciones th, .tabla-mediaciones td{display:block; border:none; padding:.15rem .2rem; hyphens:manual; -webkit-hyphens:manual}
+  /* Tablas en tarjetas: cada fila se vuelve una tarjeta y cada celda
+     lleva su encabezado como etiqueta */
+  .tabla-tarjetas thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+  .tabla-tarjetas tr{display:block; padding:.6rem 0; border-bottom:1px solid var(--borde)}
+  .tabla-tarjetas th, .tabla-tarjetas td{display:block; border:none; padding:.15rem .2rem; hyphens:manual; -webkit-hyphens:manual}
+  .tabla-tarjetas td[data-label]::before{content:attr(data-label) ": "; font-weight:700}
   .ruta-etapa{padding-left:2.8rem}
 }
 @media (max-width:38rem){

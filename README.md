@@ -29,11 +29,17 @@ primera visita también funciona sin conexión en ese mismo navegador.
 ## Qué hace el OVA
 
 - **Resultado de aprendizaje y ruta completa** de la experiencia (una semana,
-  cinco etapas): OVA, borrador en Padlet, plenaria, revisión entre pares y
-  versión final. La experiencia termina con el ajuste de la guía; no incluye
+  modelo híbrido de tipología 3 con aula invertida): entorno digital antes del
+  encuentro, aula presencial con el facilitador (docente insignia) y
+  continuidad en el entorno digital, con la modalidad, temporalidad y espacio
+  de cada etapa. La experiencia termina con el ajuste de la guía; no incluye
   su implementación con estudiantes.
-- **Herramientas de comunicación y colaboración** (OVA, WhatsApp, Google Meet
-  y Padlet) con la función de cada una, y la ficha de integración didáctica.
+- **Herramientas tecnológicas** (OVA, aula virtual institucional en Google
+  Classroom, Moodle o Colegium con foro de dudas y tablero colaborativo,
+  correo institucional y videoconferencia por Google Meet, Zoom o Microsoft
+  Teams) con la función de cada una, y la ficha de integración didáctica.
+- **Revisión entre pares en el tablero colaborativo**: cada docente publica
+  su aporte según el rol asignado y retroalimenta el aporte de dos compañeros.
 - **Recorrido en tres momentos** (reconocer, aprender y practicar, crear), con
   menú, barra de progreso y soporte del botón «atrás» del navegador.
 - **Autodiagnóstico con ruta sugerida**: según el resultado, propone el
@@ -48,8 +54,9 @@ primera visita también funciona sin conexión en ese mismo navegador.
 - Descarga del borrador en PDF o texto, y plantilla en blanco para imprimir y
   trabajar sin conexión.
 - **Instrucciones para la revisión entre pares** (autor y revisor) y
-  **fundamentos de la ruta**: tabla de mediaciones del OVA con enlaces a cada
-  elemento, origen de los cuatro criterios de selección (elaboración propia
+  **fundamentos de la ruta**: tabla de los cinco tipos de mediación
+  (pedagógica, didáctica, evaluativa, organizativa y comunicativa) con enlaces
+  a cada elemento, origen de los cuatro criterios de selección (elaboración propia
   derivada de TPACK, DUA y SAMR), fases de Design Thinking con sus evidencias,
   aplicación del DUA y referencias. Los fundamentos y los créditos se pueden
   consultar en cualquier momento desde el menú o el pie de página.
@@ -83,7 +90,7 @@ internet, así que los cambios llegan a los docentes sin pasos adicionales.
 
 ## Enlaces institucionales pendientes
 
-El OVA describe la función de WhatsApp, Google Meet y Padlet, pero no enlaza
-a ningún grupo, sesión o tablero. Cuando el equipo de formación tenga los
-enlaces reales, se pueden agregar en el paso «La ruta completa de la
+El OVA describe la función del aula virtual, el tablero colaborativo, el
+correo institucional y la videoconferencia, pero no enlaza a ningún aula,
+tablero o sesión. Cuando el facilitador tenga los enlaces reales, se pueden agregar en el paso «La ruta completa de la
 experiencia» (`index.html`, sección `#herramientas-comunicacion`).

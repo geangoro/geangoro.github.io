@@ -7,7 +7,7 @@
    GitHub Pages deja vigente hasta 10 minutos), para que cada
    actualización del sitio se vea apenas se publica.
    ============================================================ */
-const CACHE_NAME = "ova-tic-tac-v8";
+const CACHE_NAME = "ova-tic-tac-v10";
 const PRECACHE_URLS = ["./", "index.html", "css/styles.css", "js/app.js", "images/tool-selection-route.jpg",
   "documents/Resultado_aprendizaje_y_rubrica_formativa_Grupo9.docx"];
 const FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];

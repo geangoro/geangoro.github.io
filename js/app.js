@@ -809,7 +809,7 @@
     var salida = document.getElementById("resultado-cotejo");
     if (marcados === 0) { salida.innerHTML = ""; return; }
     if (marcados === total) {
-      salida.innerHTML = "<strong>✔ Tu diseño cumple toda la lista.</strong>Tu guía tiene un propósito claro, una herramienta bien justificada y una evaluación que coincide con el objetivo. Ahora revísala con la rúbrica formativa; después descárgala y publícala en Padlet antes de la plenaria.";
+      salida.innerHTML = "<strong>✔ Tu diseño cumple toda la lista.</strong>Tu guía tiene un propósito claro, una herramienta bien justificada y una evaluación que coincide con el objetivo. Ahora revísala con la rúbrica formativa; después descárgala y publícala en el tablero colaborativo del aula virtual.";
       if (interactivo) celebrar(salida);
     } else {
       salida.innerHTML = "<strong>Llevas " + marcados + " de " + total + " criterios.</strong>Vuelve a la plantilla con el botón Anterior y ajusta lo que falta. Tus marcas quedan guardadas.";
@@ -846,8 +846,8 @@
       d["p-evaluacion"] || "(sin diligenciar)",
       linea,
       "Borrador construido en el OVA Del TIC al TAC.",
-      "Publícalo en Padlet antes de la plenaria para recibir",
-      "la retroalimentación de un compañero (rúbrica formativa).",
+      "Publícalo en el tablero colaborativo del aula virtual para",
+      "recibir la retroalimentación de dos compañeros (rúbrica formativa).",
       "Licencia del OVA: CC BY-NC-SA 4.0"
     ].join("\r\n");
   }
@@ -901,7 +901,7 @@
     });
     html += enBlanco
       ? "<p class='doc-meta'>Cuando tengas internet, pasa tu diseño al OVA para que lo revise automáticamente. Licencia CC BY-NC-SA 4.0</p>"
-      : "<p class='doc-meta'>Borrador de la guía (etapa 2). Publícalo en Padlet antes de la plenaria · Licencia del OVA: CC BY-NC-SA 4.0</p>";
+      : "<p class='doc-meta'>Borrador de la guía (etapa 3). Publícalo en el tablero colaborativo del aula virtual · Licencia del OVA: CC BY-NC-SA 4.0</p>";
     area.innerHTML = html;
   }
 
